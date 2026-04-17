@@ -1,0 +1,796 @@
+{
+  "rootFolder": "/Users/christinemarquez/Desktop/gocart",
+  "analyzedAt": "2026-04-15T18:37:09.644Z",
+  "rootStructure": [
+    {
+      "name": ".gitignore",
+      "type": "file",
+      "size": 502,
+      "lines": 44
+    },
+    {
+      "name": "CODE_OF_CONDUCT.md",
+      "type": "file",
+      "size": 5227,
+      "lines": 130
+    },
+    {
+      "name": "CONTRIBUTING.md",
+      "type": "file",
+      "size": 2797,
+      "lines": 70
+    },
+    {
+      "name": "LICENSE.md",
+      "type": "file",
+      "size": 1067,
+      "lines": 9
+    },
+    {
+      "name": "README.md",
+      "type": "file",
+      "size": 3074,
+      "lines": 86
+    },
+    {
+      "name": "app",
+      "type": "dir"
+    },
+    {
+      "name": "assets",
+      "type": "dir"
+    },
+    {
+      "name": "components",
+      "type": "dir"
+    },
+    {
+      "name": "jsconfig.json",
+      "type": "file",
+      "size": 73,
+      "lines": 8
+    },
+    {
+      "name": "lib",
+      "type": "dir"
+    },
+    {
+      "name": "next.config.mjs",
+      "type": "file",
+      "size": 138,
+      "lines": 9
+    },
+    {
+      "name": "package-lock.json",
+      "type": "file",
+      "size": 73955,
+      "lines": 2152
+    },
+    {
+      "name": "package.json",
+      "type": "file",
+      "size": 561,
+      "lines": 27
+    },
+    {
+      "name": "postcss.config.mjs",
+      "type": "file",
+      "size": 81,
+      "lines": 6
+    },
+    {
+      "name": "prisma",
+      "type": "dir"
+    }
+  ],
+  "rootFileSnippets": {
+    "CODE_OF_CONDUCT.md": [
+      "# Contributor Covenant Code of Conduct",
+      "",
+      "## Version 2.1",
+      "",
+      "## Our Pledge",
+      "",
+      "We as members, contributors and leaders pledge to make participation in our",
+      "community a harassment-free experience for everyone, regardless of age, body",
+      "size, visible or invisible disability, ethnicity, sex characteristics, gender",
+      "identity and expression, level of experience, education, socio-economic status,"
+    ],
+    "CONTRIBUTING.md": [
+      "# Contributing to GoCart",
+      "",
+      "Thank you for considering contributing to **GoCart**!",
+      "We welcome contributions from everyone, whether it's fixing a bug, adding a new feature, or optimizing the codebase.",
+      "",
+      "---",
+      "",
+      "## Table of Contents",
+      "- [How to Contribute](#how-to-contribute)",
+      "- [Development Setup](#development-setup)"
+    ],
+    "LICENSE.md": [
+      "MIT License",
+      "",
+      "Copyright (c) 2025 GreatStackDev",
+      "",
+      "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense and/or sell copies of the Software and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+      "",
+      "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+      "",
+      "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+    ],
+    "README.md": [
+      "<div align=\"center\">",
+      "<h1><img src=\"https://gocart-gs.vercel.app/favicon.ico\" width=\"20\" height=\"20\" alt=\"GoCart Favicon\">",
+      "GoCart</h1>",
+      "<p>",
+      "An open-source multi-vendor e-commerce platform built with Next.js and Tailwind CSS.",
+      "</p>",
+      "<p>",
+      "<a href=\"https://github.com/GreatStackDev/goCart/blob/main/LICENSE.md\"><img src=\"https://img.shields.io/github/license/GreatStackDev/goCart?style=for-the-badge\" alt=\"License\"></a>",
+      "<a href=\"https://github.com/GreatStackDev/goCart/pulls\"><img src=\"https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge\" alt=\"PRs Welcome\"></a>",
+      "<a href=\"https://github.com/GreatStackDev/goCart/issues\"><img src=\"https://img.shields.io/github/issues/GreatStackDev/goCart?style=for-the-badge\" alt=\"GitHub issues\"></a>"
+    ],
+    "jsconfig.json": [
+      "{",
+      "\"compilerOptions\": {",
+      "\"paths\": {",
+      "\"@/*\": [\"./*\"]",
+      "}",
+      "}",
+      "}",
+      ""
+    ],
+    "next.config.mjs": [
+      "/** @type {import('next').NextConfig} */",
+      "const nextConfig = {",
+      "images:{",
+      "unoptimized: true",
+      "}",
+      "};",
+      "",
+      "export default nextConfig;",
+      ""
+    ],
+    "package-lock.json": [
+      "{",
+      "\"name\": \"gocart\",",
+      "\"version\": \"0.1.0\",",
+      "\"lockfileVersion\": 3,",
+      "\"requires\": true,",
+      "\"packages\": {",
+      "\"\": {",
+      "\"name\": \"gocart\",",
+      "\"version\": \"0.1.0\",",
+      "\"dependencies\": {"
+    ],
+    "package.json": [
+      "{",
+      "\"name\": \"gocart\",",
+      "\"version\": \"0.1.0\",",
+      "\"private\": true,",
+      "\"scripts\": {",
+      "\"dev\": \"next dev --turbopack\",",
+      "\"build\": \"next build\",",
+      "\"start\": \"next start\",",
+      "\"lint\": \"next lint\"",
+      "},"
+    ],
+    "postcss.config.mjs": [
+      "const config = {",
+      "plugins: [\"@tailwindcss/postcss\"],",
+      "};",
+      "",
+      "export default config;",
+      ""
+    ]
+  },
+  "importantFolders": [
+    {
+      "path": "app",
+      "category": "frontend",
+      "fileCount": 25,
+      "primaryLanguage": "JavaScript"
+    },
+    {
+      "path": "app/(public)",
+      "category": "assets",
+      "fileCount": 10,
+      "primaryLanguage": "JavaScript"
+    },
+    {
+      "path": "app/admin/approve",
+      "category": "frontend",
+      "fileCount": 1,
+      "primaryLanguage": "JavaScript"
+    },
+    {
+      "path": "assets",
+      "category": "assets",
+      "fileCount": 26,
+      "primaryLanguage": "JavaScript"
+    },
+    {
+      "path": "components",
+      "category": "frontend",
+      "fileCount": 30,
+      "primaryLanguage": "JavaScript"
+    },
+    {
+      "path": "lib",
+      "category": "core",
+      "fileCount": 5,
+      "primaryLanguage": "JavaScript"
+    }
+  ],
+  "readmeParagraphs": {
+    "root": "<div align=\"center\">\n  <h1><img src=\"https://gocart-gs.vercel.app/favicon.ico\" width=\"20\" height=\"20\" alt=\"GoCart Favicon\">\n   GoCart</h1>"
+  },
+  "totals": {
+    "numFiles": 99,
+    "numDirs": 30,
+    "totalSizeBytes": 4221246,
+    "totalLinesOfCode": 3010
+  },
+  "fileCategories": {
+    "other": 35,
+    "documentation": 4,
+    "source": 57,
+    "config": 3
+  },
+  "linesOfCodePerLanguage": {
+    "JavaScript": 3010
+  },
+  "filesPerLanguage": {
+    "JavaScript": 57
+  },
+  "projectTypes": [
+    "JavaScript/Node.js"
+  ],
+  "frameworks": [
+    "React"
+  ],
+  "entryPoints": [],
+  "ciCdTools": [],
+  "packageManagers": [
+    "npm/yarn"
+  ],
+  "topLevelDirectories": [
+    {
+      "name": "app",
+      "numFiles": 25,
+      "totalLoc": 1257,
+      "dominantLanguage": "JavaScript"
+    },
+    {
+      "name": "components",
+      "numFiles": 30,
+      "totalLoc": 1244,
+      "dominantLanguage": "JavaScript"
+    },
+    {
+      "name": "assets",
+      "numFiles": 26,
+      "totalLoc": 392,
+      "dominantLanguage": "JavaScript"
+    },
+    {
+      "name": "lib",
+      "numFiles": 5,
+      "totalLoc": 117,
+      "dominantLanguage": "JavaScript"
+    },
+    {
+      "name": "prisma",
+      "numFiles": 1,
+      "totalLoc": 0
+    }
+  ],
+  "detailedDirectories": [
+    {
+      "path": "app",
+      "name": "app",
+      "level": 1,
+      "numFiles": 25,
+      "totalLoc": 1257,
+      "dominantLanguage": "JavaScript",
+      "category": "Application",
+      "description": "Application module with 25 files (JavaScript)",
+      "subdirectories": [
+        {
+          "path": "app/(public)",
+          "name": "(public)",
+          "level": 2,
+          "numFiles": 10,
+          "totalLoc": 464,
+          "dominantLanguage": "JavaScript",
+          "category": "General",
+          "description": "General module with 10 files (JavaScript)",
+          "subdirectories": [
+            {
+              "path": "app/(public)/cart",
+              "name": "cart",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 104,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/(public)/create-store",
+              "name": "create-store",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 93,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/(public)/orders",
+              "name": "orders",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 46,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/(public)/loading",
+              "name": "loading",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 23,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/(public)/pricing",
+              "name": "pricing",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 9,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            }
+          ]
+        },
+        {
+          "path": "app/store",
+          "name": "store",
+          "level": 2,
+          "numFiles": 5,
+          "totalLoc": 421,
+          "dominantLanguage": "JavaScript",
+          "category": "General",
+          "description": "General module with 5 files (JavaScript)",
+          "subdirectories": [
+            {
+              "path": "app/store/orders",
+              "name": "orders",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 160,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/store/add-product",
+              "name": "add-product",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 80,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/store/manage-product",
+              "name": "manage-product",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 70,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            }
+          ]
+        },
+        {
+          "path": "app/admin",
+          "name": "admin",
+          "level": 2,
+          "numFiles": 5,
+          "totalLoc": 333,
+          "dominantLanguage": "JavaScript",
+          "category": "General",
+          "description": "General module with 5 files (JavaScript)",
+          "subdirectories": [
+            {
+              "path": "app/admin/coupons",
+              "name": "coupons",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 135,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/admin/approve",
+              "name": "approve",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 59,
+              "dominantLanguage": "JavaScript",
+              "category": "Application",
+              "description": "Application module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "app/admin/stores",
+              "name": "stores",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 59,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "components",
+      "name": "components",
+      "level": 1,
+      "numFiles": 30,
+      "totalLoc": 1244,
+      "dominantLanguage": "JavaScript",
+      "category": "General",
+      "description": "General module with 30 files (JavaScript)",
+      "subdirectories": [
+        {
+          "path": "components/admin",
+          "name": "admin",
+          "level": 2,
+          "numFiles": 4,
+          "totalLoc": 151,
+          "dominantLanguage": "JavaScript",
+          "category": "General",
+          "description": "General module with 4 files (JavaScript)",
+          "subdirectories": []
+        },
+        {
+          "path": "components/store",
+          "name": "store",
+          "level": 2,
+          "numFiles": 3,
+          "totalLoc": 111,
+          "dominantLanguage": "JavaScript",
+          "category": "General",
+          "description": "General module with 3 files (JavaScript)",
+          "subdirectories": []
+        }
+      ]
+    },
+    {
+      "path": "assets",
+      "name": "assets",
+      "level": 1,
+      "numFiles": 26,
+      "totalLoc": 392,
+      "dominantLanguage": "JavaScript",
+      "category": "General",
+      "description": "General module with 26 files (JavaScript)",
+      "subdirectories": []
+    },
+    {
+      "path": "lib",
+      "name": "lib",
+      "level": 1,
+      "numFiles": 5,
+      "totalLoc": 117,
+      "dominantLanguage": "JavaScript",
+      "category": "Library",
+      "description": "Library module with 5 files (JavaScript)",
+      "subdirectories": [
+        {
+          "path": "lib/features",
+          "name": "features",
+          "level": 2,
+          "numFiles": 4,
+          "totalLoc": 101,
+          "dominantLanguage": "JavaScript",
+          "category": "General",
+          "description": "General module with 4 files (JavaScript)",
+          "subdirectories": [
+            {
+              "path": "lib/features/cart",
+              "name": "cart",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 44,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "lib/features/product",
+              "name": "product",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 21,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "lib/features/address",
+              "name": "address",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 18,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            },
+            {
+              "path": "lib/features/rating",
+              "name": "rating",
+              "level": 3,
+              "numFiles": 1,
+              "totalLoc": 18,
+              "dominantLanguage": "JavaScript",
+              "category": "General",
+              "description": "General module with 1 files (JavaScript)",
+              "subdirectories": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "prisma",
+      "name": "prisma",
+      "level": 1,
+      "numFiles": 1,
+      "totalLoc": 0,
+      "category": "General",
+      "description": "General module with 1 files",
+      "subdirectories": []
+    }
+  ],
+  "architecturalInsights": {
+    "coreApplications": [
+      {
+        "path": "app",
+        "name": "app",
+        "level": 1,
+        "numFiles": 25,
+        "totalLoc": 1257,
+        "dominantLanguage": "JavaScript",
+        "category": "Application",
+        "description": "Application module with 25 files (JavaScript)",
+        "subdirectories": [
+          {
+            "path": "app/(public)",
+            "name": "(public)",
+            "level": 2,
+            "numFiles": 10,
+            "totalLoc": 464,
+            "dominantLanguage": "JavaScript",
+            "category": "General",
+            "description": "General module with 10 files (JavaScript)",
+            "subdirectories": [
+              {
+                "path": "app/(public)/cart",
+                "name": "cart",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 104,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/(public)/create-store",
+                "name": "create-store",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 93,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/(public)/orders",
+                "name": "orders",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 46,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/(public)/loading",
+                "name": "loading",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 23,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/(public)/pricing",
+                "name": "pricing",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 9,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              }
+            ]
+          },
+          {
+            "path": "app/store",
+            "name": "store",
+            "level": 2,
+            "numFiles": 5,
+            "totalLoc": 421,
+            "dominantLanguage": "JavaScript",
+            "category": "General",
+            "description": "General module with 5 files (JavaScript)",
+            "subdirectories": [
+              {
+                "path": "app/store/orders",
+                "name": "orders",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 160,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/store/add-product",
+                "name": "add-product",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 80,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/store/manage-product",
+                "name": "manage-product",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 70,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              }
+            ]
+          },
+          {
+            "path": "app/admin",
+            "name": "admin",
+            "level": 2,
+            "numFiles": 5,
+            "totalLoc": 333,
+            "dominantLanguage": "JavaScript",
+            "category": "General",
+            "description": "General module with 5 files (JavaScript)",
+            "subdirectories": [
+              {
+                "path": "app/admin/coupons",
+                "name": "coupons",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 135,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/admin/approve",
+                "name": "approve",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 59,
+                "dominantLanguage": "JavaScript",
+                "category": "Application",
+                "description": "Application module with 1 files (JavaScript)",
+                "subdirectories": []
+              },
+              {
+                "path": "app/admin/stores",
+                "name": "stores",
+                "level": 3,
+                "numFiles": 1,
+                "totalLoc": 59,
+                "dominantLanguage": "JavaScript",
+                "category": "General",
+                "description": "General module with 1 files (JavaScript)",
+                "subdirectories": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "entryPointDetails": [],
+    "serviceArchitecture": {
+      "microservices": [],
+      "monoliths": [],
+      "libraries": [
+        "lib"
+      ]
+    },
+    "layeredArchitecture": {
+      "presentation": [],
+      "business": [],
+      "data": [],
+      "infrastructure": []
+    }
+  },
+  "largeFiles": [],
+  "dependencies": {
+    "production": [
+      "next",
+      "react",
+      "react-dom",
+      "react-redux",
+      "react-hot-toast",
+      "recharts",
+      "date-fns",
+      "lucide-react",
+      "@reduxjs/toolkit"
+    ],
+    "development": [
+      "@tailwindcss/postcss",
+      "tailwindcss"
+    ],
+    "total": 11
+  },
+  "complexity": {
+    "averageFileSize": 30.404040404040405,
+    "maxFileSize": 0,
+    "nestedDepth": 0,
+    "estimatedComplexity": "low"
+  },
+  "license": "MIT"
+}

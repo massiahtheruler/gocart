@@ -1,0 +1,558 @@
+@import "tailwindcss";
+
+@layer components {
+  @keyframes marqueeScroll {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .glass-lift {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.58),
+      rgba(255, 255, 255, 0.34)
+    );
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.28),
+      0 18px 34px rgba(71, 85, 105, 0.13);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .glass-lift:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+      0 26px 42px rgba(51, 65, 85, 0.2);
+  }
+
+  .glass-lift:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow:
+      inset 12px 12px 22px rgba(100, 116, 139, 0.22),
+      inset -8px -8px 18px rgba(255, 255, 255, 0.82),
+      0 8px 18px rgba(71, 85, 105, 0.22);
+  }
+
+  .glass-sheen::before {
+    content: "";
+    position: absolute;
+    inset: -35% auto -35% -30%;
+    width: 34%;
+    transform: translateX(-165%) rotate(16deg);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.12) 30%,
+      rgba(255, 255, 255, 0.58) 50%,
+      rgba(255, 255, 255, 0.12) 70%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transition: transform 420ms ease;
+    pointer-events: none;
+  }
+
+  .glass-sheen:hover::before {
+    transform: translateX(430%) rotate(16deg);
+  }
+
+  .glass-sheen:active::before {
+    transform: translateX(500%) rotate(16deg);
+  }
+
+  .emerald-cta {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(167, 243, 208, 0.6);
+    background: linear-gradient(135deg, rgb(6, 95, 70), rgb(5, 150, 105));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 18px 34px rgba(5, 150, 105, 0.24);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      filter 180ms ease;
+  }
+
+  .emerald-cta:hover {
+    transform: translateY(-2px);
+    filter: saturate(1.06) brightness(1.04);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      0 24px 42px rgba(5, 150, 105, 0.28);
+  }
+
+  .emerald-cta:active {
+    transform: translateY(1px) scale(0.985);
+    box-shadow:
+      inset 10px 10px 20px rgba(4, 78, 59, 0.32),
+      inset -4px -4px 12px rgba(52, 211, 153, 0.15),
+      0 10px 20px rgba(4, 78, 59, 0.28);
+  }
+
+  .nav-link-soft {
+    transition:
+      transform 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .nav-link-soft:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.82),
+      0 12px 22px rgba(71, 85, 105, 0.12);
+  }
+
+  .nav-link-soft:active {
+    transform: translateY(1px) scale(0.985);
+    box-shadow:
+      inset 8px 8px 16px rgba(100, 116, 139, 0.14),
+      inset -6px -6px 14px rgba(255, 255, 255, 0.74);
+  }
+
+  .nav-showroom {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .nav-showroom::before {
+    content: "";
+    position: absolute;
+    inset: -26px auto auto 8%;
+    width: 240px;
+    height: 92px;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle,
+      rgba(168, 85, 247, 0.14) 0%,
+      rgba(168, 85, 247, 0.045) 42%,
+      rgba(255, 255, 255, 0) 72%
+    );
+    filter: blur(12px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .nav-showroom::after {
+    content: "";
+    position: absolute;
+    right: 12%;
+    top: -28px;
+    width: 340px;
+    height: 110px;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle,
+      rgba(148, 163, 184, 0.14) 0%,
+      rgba(226, 232, 240, 0.08) 45%,
+      rgba(255, 255, 255, 0) 74%
+    );
+    filter: blur(16px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .logo-pedestal {
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-pedestal::before {
+    content: "";
+    position: absolute;
+    inset: -12px -22px;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at 30% 50%,
+      rgba(233, 213, 255, 0.78),
+      rgba(216, 180, 254, 0.24) 42%,
+      rgba(255, 255, 255, 0.05) 64%,
+      rgba(255, 255, 255, 0) 78%
+    );
+    opacity: 0.92;
+    filter: blur(14px);
+    z-index: -1;
+    pointer-events: none;
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .logo-pedestal:hover::before {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+
+  .clerk-user-trigger {
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.62),
+      rgba(255, 255, 255, 0.38)
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.26),
+      2px 8px 16px rgba(71, 85, 105, 0.14);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition:
+      transform 500ms ease,
+      box-shadow 500ms ease,
+      background-color 180ms ease;
+    transform: scale(1.08);
+  }
+
+  .clerk-user-trigger:hover {
+    transform: translateY(-1px) scale(1.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.32),
+      0 24px 40px rgba(51, 65, 85, 0.2);
+  }
+
+  .clerk-user-trigger:active {
+    transform: translateY(1px) scale(1.04);
+    box-shadow:
+      inset 12px 12px 22px rgba(100, 116, 139, 0.22),
+      inset -8px -8px 18px rgba(255, 255, 255, 0.82),
+      0 8px 18px rgba(71, 85, 105, 0.22);
+  }
+
+  .clerk-user-avatar {
+    height: 2.55rem;
+    width: 2.55rem;
+    box-shadow:
+      0 10px 24px rgba(71, 85, 105, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  .clerk-user-popover {
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.74);
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(248, 250, 252, 0.82)
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.88),
+      0 30px 70px rgba(51, 65, 85, 0.16);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    overflow: hidden;
+  }
+
+  .clerk-user-main {
+    position: relative;
+    padding: 0.55rem;
+    background:
+      radial-gradient(
+        circle at top left,
+        rgba(233, 213, 255, 0.5),
+        transparent 38%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0));
+  }
+
+  .clerk-user-preview {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    background: linear-gradient(
+      135deg,
+      rgba(249, 244, 236, 0.9),
+      rgba(255, 251, 245, 0.82)
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      0 14px 28px rgba(71, 85, 105, 0.08);
+    padding: 0.85rem 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .clerk-user-preview::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: linear-gradient(
+      180deg,
+      rgba(94, 234, 212, 0.92),
+      rgba(45, 212, 191, 0.42)
+    );
+    box-shadow: 0 0 18px rgba(45, 212, 191, 0.22);
+    pointer-events: none;
+  }
+
+  .clerk-user-preview::after {
+    content: "";
+    position: absolute;
+    inset: -24% auto auto 58%;
+    width: 44%;
+    height: 70%;
+    background: radial-gradient(
+      circle,
+      rgba(204, 251, 241, 0.24) 0%,
+      rgba(236, 254, 255, 0.1) 44%,
+      rgba(255, 255, 255, 0) 74%
+    );
+    filter: blur(18px);
+    pointer-events: none;
+  }
+
+  .clerk-user-preview-name {
+    color: rgb(15 23 42);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .clerk-user-preview-email {
+    color: rgb(100 116 139);
+    font-size: 0.78rem;
+  }
+
+  .clerk-user-actions {
+    gap: 0.3rem;
+    padding: 0.25rem 0.45rem 0.55rem;
+  }
+
+  .clerk-user-action {
+    position: relative;
+    overflow: hidden;
+    min-height: 2.75rem;
+    border-radius: 0.95rem;
+    color: rgb(15 23 42);
+    background: linear-gradient(
+      135deg,
+      rgba(249, 244, 236, 0.92),
+      rgba(255, 251, 245, 0.82)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.88),
+      inset 0 -1px 0 rgba(226, 232, 240, 0.4),
+      0 10px 24px rgba(100, 116, 139, 0.08);
+    transition:
+      transform 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease;
+  }
+
+  .clerk-user-action::before {
+    content: "";
+    position: absolute;
+    inset: -38% auto -38% -32%;
+    width: 34%;
+    transform: translateX(-180%) rotate(16deg);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.12) 30%,
+      rgba(236, 254, 255, 0.74) 50%,
+      rgba(255, 255, 255, 0.14) 70%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transition: transform 420ms ease;
+    pointer-events: none;
+  }
+
+  .clerk-user-action:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(
+      135deg,
+      rgba(235, 255, 250, 0.94),
+      rgba(214, 251, 245, 0.72)
+    );
+    border-color: rgba(153, 246, 228, 0.84);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      inset 0 -1px 0 rgba(204, 251, 241, 0.42),
+      0 14px 28px rgba(20, 184, 166, 0.14);
+  }
+
+  .clerk-user-action:hover::before {
+    transform: translateX(420%) rotate(16deg);
+  }
+
+  .clerk-user-action:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 8px 8px 16px rgba(13, 148, 136, 0.12),
+      inset -6px -6px 14px rgba(255, 255, 255, 0.72),
+      0 6px 12px rgba(15, 118, 110, 0.12);
+  }
+
+  .clerk-user-action:active::before {
+    transform: translateX(500%) rotate(16deg);
+  }
+
+  .clerk-orders-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.8rem;
+    width: 1.8rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(153, 246, 228, 0.72);
+    background: linear-gradient(
+      135deg,
+      rgba(236, 254, 255, 0.96),
+      rgba(204, 251, 241, 0.74)
+    );
+    color: rgb(13 148 136);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      0 8px 18px rgba(20, 184, 166, 0.14);
+  }
+
+  .clerk-orders-icon--featured {
+    height: 2rem;
+    width: 2rem;
+    border-color: rgba(94, 234, 212, 0.9);
+    background: linear-gradient(
+      135deg,
+      rgba(236, 254, 255, 0.98),
+      rgba(204, 251, 241, 0.82)
+    );
+    color: rgb(13 148 136);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      0 10px 22px rgba(20, 184, 166, 0.2),
+      0 0 0 4px rgba(204, 251, 241, 0.35);
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      filter 220ms ease;
+  }
+
+  button.cl-userButtonPopoverCustomItemButton {
+    position: relative;
+    overflow: hidden;
+    color: rgb(15 23 42) !important;
+    font-weight: 600 !important;
+    background: linear-gradient(
+      135deg,
+      rgba(249, 244, 236, 0.96),
+      rgba(255, 251, 245, 0.9)
+    ) !important;
+    border: 1px solid rgba(255, 255, 255, 0.84) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 10px 22px rgba(100, 116, 139, 0.08) !important;
+  }
+
+  button.cl-userButtonPopoverCustomItemButton::after {
+    content: "";
+    position: absolute;
+    left: 4.25rem;
+    right: 1.15rem;
+    bottom: 0.8rem;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      rgba(45, 212, 191, 0),
+      rgba(45, 212, 191, 0.95),
+      rgba(153, 246, 228, 1),
+      rgba(45, 212, 191, 0)
+    );
+    transform: scaleX(0);
+    transform-origin: left center;
+    opacity: 0.38;
+    transition:
+      transform 320ms ease,
+      opacity 220ms ease;
+    pointer-events: none;
+  }
+
+  button.cl-userButtonPopoverCustomItemButton:hover::after {
+    transform: scaleX(0.3);
+    opacity: 1;
+  }
+
+  button.cl-userButtonPopoverCustomItemButton:hover
+    .cl-userButtonPopoverCustomItemButtonIconBox,
+  button.cl-userButtonPopoverCustomItemButton:hover
+    .cl-userButtonPopoverActionItemButtonIcon {
+    filter: drop-shadow(0 0 12px rgba(45, 212, 191, 0.18));
+    /* background-color: aquamarine; */
+  }
+
+  button.cl-userButtonPopoverCustomItemButton
+    .cl-userButtonPopoverCustomItemButtonIconBox,
+  button.cl-userButtonPopoverCustomItemButton
+    .cl-userButtonPopoverActionItemButtonIcon {
+    filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.08));
+  }
+
+  button.cl-userButtonPopoverCustomItemButton .clerk-orders-icon--featured {
+    transform: translateY(-10px) translateX(-11px) scale(1.03);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.98),
+      0 12px 24px rgba(20, 184, 166, 0.18),
+      0 0 0 4px rgba(204, 251, 241, 0.42);
+  }
+
+  button.cl-userButtonPopoverCustomItemButton:hover
+    .clerk-orders-icon--featured {
+    transform: translateY(-10px) translateX(-11px) scale(1.1);
+    filter: saturate(1.08) brightness(1.05);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.98),
+      0 16px 30px rgba(20, 184, 166, 0.26),
+      0 0 0 5px rgba(204, 251, 241, 0.52),
+      0 0 30px rgba(45, 212, 191, 0.26);
+  }
+
+  .clerk-user-action-label {
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  .clerk-user-action-icon {
+    color: rgb(100 116 139);
+  }
+
+  .clerk-user-footer {
+    border-top: 1px solid rgba(226, 232, 240, 0.8);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.28),
+      rgba(248, 250, 252, 0.48)
+    );
+  }
+}
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
