@@ -4,9 +4,15 @@ import {
   syncUserCreation,
   syncUserDeletion,
   syncUserUpdate,
-} from "./functions";
+  deleteCouponsOnExpiry,
+} from "@/inngest/functions";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [syncUserCreation, syncUserUpdate, syncUserDeletion],
+  functions: [
+    syncUserCreation,
+    syncUserUpdate,
+    syncUserDeletion,
+    deleteCouponsOnExpiry,
+  ],
 });

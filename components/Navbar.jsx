@@ -1,6 +1,12 @@
 "use client";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
-import { ArrowRight, PackageIcon, Search, ShoppingCart } from "lucide-react";
+import {
+  ArrowRight,
+  PackageIcon,
+  PlusCircle,
+  Search,
+  ShoppingCart,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -68,8 +74,8 @@ const Navbar = () => {
             </span>
             cart
             <span className="text-emerald-700 text-5xl leading-none">.</span>
-            <p className="absolute -right-8 -top-1 flex items-center gap-2 rounded-full border border-emerald-200/80 bg-gradient-to-r from-emerald-600 to-emerald-500 px-3 py-0.5 text-xs font-semibold text-white shadow-[0_10px_28px_rgba(5,150,105,0.32)]">
-              plus
+            <p className="absolute -right-8 -top-1 flex items-center rounded-full border border-emerald-200/80 bg-gradient-to-r from-emerald-600 to-emerald-500 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white shadow-[0_10px_28px_rgba(5,150,105,0.32)]">
+              +plus
             </p>
           </Link>
 
@@ -149,6 +155,15 @@ const Navbar = () => {
                       }
                       onClick={() => router.push("/orders")}
                     />
+                    <UserButton.Action
+                      label="Add account"
+                      labelIcon={
+                        <span className="clerk-orders-icon clerk-orders-icon--featured">
+                          <PlusCircle size={15} />
+                        </span>
+                      }
+                      onClick={() => router.push("/create-store")}
+                    />
                   </UserButton.MenuItems>
                 </UserButton>
               )}
@@ -162,7 +177,7 @@ const Navbar = () => {
                 </SignUpButton>
               ) : (
                 <button
-                  onClick={() => router.push("/create-store")}
+                  onClick={() => router.push("/store")}
                   className="emerald-cta glass-sheen inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-white"
                 >
                   Store
@@ -200,6 +215,15 @@ const Navbar = () => {
                       </span>
                     }
                     onClick={() => router.push("/orders")}
+                  />
+                  <UserButton.Action
+                    label="Add account"
+                    labelIcon={
+                      <span className="clerk-orders-icon">
+                        <PlusCircle size={15} />
+                      </span>
+                    }
+                    onClick={() => router.push("/create-store")}
                   />
                 </UserButton.MenuItems>
               </UserButton>

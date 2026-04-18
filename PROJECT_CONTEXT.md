@@ -57,6 +57,10 @@ Use this file to align future chat sessions quickly.
   - motion, glassmorphism, tactile controls, smoother scrolling, and richer interactions are welcome when used intentionally
   - optimistic updates are desirable in the right areas
   - signed-in navbar direction is `UserButton` plus a `Store` CTA rather than cluttering the nav with too many auth actions
+  - signed-in user menu should include `My Orders` and `Add account`
+  - future seller flow should be:
+    - `Add account` = quick route to create another store/account
+    - `Store` = access/manage existing seller spaces, and later route to a store list/switcher when multiple stores exist
 
 ## Product / Feature Direction
 - Multi-vendor marketplace with separate seller and customer experiences
@@ -67,6 +71,40 @@ Use this file to align future chat sessions quickly.
 - Cleaner footer and more polished supporting sections
 - Active buttons, routes, and states across most of the interface
 - Better micro-interactions and motion throughout the storefront
+
+## System Map
+- Frontend Pages
+  - storefront pages: home, shop, product, cart, orders
+  - seller pages: create-store, store dashboard, add/manage product, store orders
+  - admin pages: stores, approve, coupons
+- API Routes
+  - store routes: create, product, dashboard, data, is-seller, stock-toggle
+  - admin routes: stores, approve-store, is-admin
+  - inngest route: event endpoint for background sync functions
+- Services
+  - Clerk = authentication and session state
+  - Inngest = event-driven background jobs
+  - ImageKit = image storage and delivery
+  - Prisma = database access in code
+  - PostgreSQL = relational database engine
+  - Neon = hosted Postgres provider
+- Main Data Flow
+  - user signs in with Clerk
+  - Clerk events are synced into Prisma user records via Inngest
+  - seller submits store form to `/api/store/create`
+  - store logo uploads to ImageKit
+  - store/product/order data is stored through Prisma in Postgres on Neon
+  - admin pages call admin APIs to review and approve stores
+- Fast Mental Model
+  - pages = what users see
+  - API routes = what users trigger
+  - Clerk = who the user is
+  - Inngest = what happens automatically in the background
+  - ImageKit = where images live
+  - Prisma = how app code talks to the database
+  - SQL = the language Postgres understands
+  - PostgreSQL = the database engine
+  - Neon = where that database is hosted
 
 ## Frontend Polish Wishlist
 - Add more polished modals where useful
@@ -83,6 +121,29 @@ Use this file to align future chat sessions quickly.
 - Keep `DATABASE_URL` as the pooled Neon URL.
 - Keep `DIRECT_URL` as the true direct Neon URL, not the `-pooler` host.
 - Run `npx prisma generate` and `npm run build` before deploy.
+
+## Post-Deploy Sanity Checklist
+- Auth
+  - Sign in works
+  - Sign out works
+  - `UserButton` menu renders correctly
+  - `My Orders`, `Add account`, and `Store` route where expected
+- Database
+  - New users are present in the database
+  - Store creation flows can read/write as expected
+  - Prisma runtime works in production without client-generation errors
+- Inngest
+  - `/api/inngest` is reachable
+  - Clerk user create/update/delete sync functions are registered and reachable
+  - any future store-create event route is either implemented or intentionally left as a stub
+- Env Vars
+  - deployed `DATABASE_URL` uses Neon pooled URL
+  - deployed `DIRECT_URL` uses Neon direct non-pooler URL
+  - Clerk keys are production keys, not dev keys
+  - Inngest event/signing keys are present in the deployed environment
+- Dev / Placeholder Checks
+  - no critical flows still depend on dummy data where production data is expected
+  - no obvious dev-mode warnings remain that would affect launch confidence
 
 ## Useful Links / Notes
 - Toolbox notes: `TOOLBOX_NOTES.md`
