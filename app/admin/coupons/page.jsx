@@ -43,7 +43,7 @@ export default function AdminCoupons() {
       newCoupon.discount = Number(newCoupon.discount);
       newCoupon.expiresAt = new Date(newCoupon.expiresAt);
 
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         "/api/admin/coupon",
         { coupon: newCoupon },
         {
