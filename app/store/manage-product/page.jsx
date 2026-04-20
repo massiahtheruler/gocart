@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import Loading from "@/components/Loading";
-import { productDummyData } from "@/assets/assets";
 import { useAuth, useUser } from "@clerk/nextjs";
 
 export default function StoreManageProducts() {
@@ -40,7 +40,7 @@ export default function StoreManageProducts() {
         { productId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-      setProducts((precProducts) =>
+      setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.id === productId
             ? { ...product, inStock: !product.inStock }
@@ -51,7 +51,6 @@ export default function StoreManageProducts() {
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
     }
-    // Logic to toggle the stock of a product
   };
 
   useEffect(() => {

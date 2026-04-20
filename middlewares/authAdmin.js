@@ -11,9 +11,11 @@ const authAdmin = async (userId) => {
       .map((email) => email.trim().toLowerCase())
       .filter(Boolean);
 
-    const userEmail = user.emailAddresses?.[0]?.emailAddress?.toLowerCase();
+    const userEmails = (user.emailAddresses || [])
+      .map((entry) => entry.emailAddress?.toLowerCase())
+      .filter(Boolean);
 
-    return Boolean(userEmail && adminEmails.includes(userEmail));
+    return userEmails.some((email) => adminEmails.includes(email));
   } catch (error) {
     console.error(error);
     return false;

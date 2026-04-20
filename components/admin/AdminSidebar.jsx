@@ -28,7 +28,7 @@ const AdminSidebar = () => {
       <div className="flex flex-col gap-3 justify-center items-center pt-8 max-sm:hidden">
         <Image
           className="w-14 h-14 rounded-full"
-          src={User.imageUrl}
+          src={user.imageUrl}
           alt=""
           width={80}
           height={80}

@@ -29,6 +29,12 @@ export async function POST(request) {
     if (!product) {
       return NextResponse.json({ error: "no product found" }, { status: 404 });
     }
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: { inStock: !product.inStock },
+    });
+
     return NextResponse.json({ message: "product stock updated successfully" });
   } catch (error) {
     console.error(error);

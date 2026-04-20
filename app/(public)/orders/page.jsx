@@ -11,9 +11,19 @@ import toast from "react-hot-toast";
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const router = useRouter();
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const { getToken } = useAuth();
   const { user, isLoaded } = useUser();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const isSuccess = params.get("success") === "true";
+    setPaymentSuccess(isSuccess);
+    if (isSuccess) {
+      toast.success("Payment completed successfully.");
+    }
+  }, []);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -54,6 +64,11 @@ export default function Orders() {
             text={`Showing total ${orders.length} orders`}
             linkText={"Go to home"}
           />
+          {paymentSuccess && (
+            <div className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+              Payment completed successfully. Your order is now in the system.
+            </div>
+          )}
 
           <table className="w-full max-w-5xl text-slate-500 table-auto border-separate border-spacing-y-12 border-spacing-x-4">
             <thead>

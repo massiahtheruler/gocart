@@ -80,6 +80,7 @@ export default function StoreOrders() {
                   "Customer",
                   "Total",
                   "Payment",
+                  "Paid",
                   "Coupon",
                   "Status",
                   "Date",
@@ -103,6 +104,17 @@ export default function StoreOrders() {
                     ${order.total}
                   </td>
                   <td className="px-4 py-3">{order.paymentMethod}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-medium ${
+                        order.isPaid
+                          ? "bg-green-100 text-green-700"
+                          : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
+                      {order.isPaid ? "Yes" : "No"}
+                    </span>
+                  </td>
                   <td className="px-4 py-3">
                     {order.isCouponUsed ? (
                       <span className="rounded-full bg-green-100 px-2 py-1 text-xs text-green-700">

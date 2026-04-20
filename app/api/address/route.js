@@ -11,7 +11,10 @@ export async function POST(request) {
       data: address,
     });
 
-    return NextResponse.json({ message: "Address updated successfully" });
+    return NextResponse.json({
+      message: "Address updated successfully",
+      newAddress,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -26,7 +29,7 @@ export async function GET(request) {
     const { userId } = getAuth(request);
 
     const addresses = await prisma.address.findMany({
-      Where: { userId },
+      where: { userId },
     });
 
     return NextResponse.json({ addresses });

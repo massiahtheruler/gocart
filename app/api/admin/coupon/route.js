@@ -1,12 +1,12 @@
 import authAdmin from "@/middlewares/authAdmin";
-import { getAuth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
 import { inngest } from "@/inngest/client";
 
 export async function POST(request) {
   try {
-    const { userId } = getAuth(request);
+    const { userId } = await auth();
     const isAdmin = await authAdmin(userId);
     if (!isAdmin) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
@@ -36,7 +36,7 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   try {
-    const { userId } = getAuth(request);
+    const { userId } = await auth();
     const isAdmin = await authAdmin(userId);
 
     if (!isAdmin) {
@@ -57,9 +57,9 @@ export async function DELETE(request) {
     );
   }
 }
-export async function GET(request) {
+export async function GET() {
   try {
-    const { userId } = getAuth(request);
+    const { userId } = await auth();
     const isAdmin = await authAdmin(userId);
 
     if (!isAdmin) {

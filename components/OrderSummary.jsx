@@ -18,7 +18,9 @@ const OrderSummary = ({ totalPrice, items }) => {
   const { getToken } = useAuth();
   const dispatch = useDispatch();
 
-  const addressList = useSelector((state) => state.address.list);
+  const addressList = useSelector((state) =>
+    (state.address.list || []).filter(Boolean),
+  );
 
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -137,13 +139,16 @@ const OrderSummary = ({ totalPrice, items }) => {
             {addressList.length > 0 && (
               <select
                 className="border border-slate-400 p-2 w-full my-3 outline-none rounded"
-                onChange={(e) =>
-                  setSelectedAddress(addressList[e.target.value])
-                }
+                onChange={(e) => {
+                  const selectedIndex = e.target.value;
+                  setSelectedAddress(
+                    selectedIndex === "" ? null : addressList[selectedIndex],
+                  );
+                }}
               >
                 <option value="">Select Address</option>
                 {addressList.map((address, index) => (
-                  <option key={index} value={index}>
+                  <option key={address.id || index} value={index}>
                     {address.name}, {address.city}, {address.state},{" "}
                     {address.zip}
                   </option>

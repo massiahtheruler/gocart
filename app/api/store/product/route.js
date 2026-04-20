@@ -1,4 +1,5 @@
-import imagekit from "@/config/imagekit";
+import imagekit, { buildImageKitUrl } from "@/config/imagekit";
+import authSeller from "@/middlewares/authSeller";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
@@ -15,7 +16,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const name = formData.get("name");
     const description = formData.get("description");
-    const mrp = Number(formData.get("price"));
+    const mrp = Number(formData.get("mrp"));
     const price = Number(formData.get("price"));
     const category = formData.get("category");
     const images = formData.getAll("images");
@@ -35,20 +36,16 @@ export async function POST(request) {
     }
     const imagesUrl = await Promise.all(
       images.map(async (image) => {
-        const buffer = Buffer.from(await image.arrayBuffer());
-        const response = await imagekit.upload({
-          file: buffer,
-          filename: image.name,
-          folder: "products",
+        const response = await imagekit.files.upload({
+          file: image,
+          fileName: image.name || `${name}-image`,
+          folder: "/gocart/products",
         });
-        const url = imagekit.url({
-          path: response.filePath,
-          transformation: [
-            { quality: "auto" },
-            { format: "webp" },
-            { width: "1024" },
-          ],
-        });
+        const url = buildImageKitUrl(response.filePath, [
+          { quality: "auto" },
+          { format: "webp" },
+          { width: "1024" },
+        ]);
         return url;
       }),
     );
