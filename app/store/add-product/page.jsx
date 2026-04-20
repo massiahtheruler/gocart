@@ -150,7 +150,7 @@ export default function StoreAddProduct() {
               type="file"
               accept="image/*"
               id={`images${key}`}
-              onChange={(e) => handleImageUploa(key, e.target.files[0])}
+              onChange={(e) => handleImageUpload(key, e.target.files[0])}
               hidden
             />
           </label>
