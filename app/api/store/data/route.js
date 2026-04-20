@@ -3,26 +3,29 @@ import prisma from "@/lib/prismadb";
 
 export async function GET(request) {
   try {
-    const { searchParams } = new url(request.url);
-    const username = searchParams.get("username").toLowerCase();
+    const { searchParams } = new URL(request.url);
+    const rawUsername = searchParams.get("username");
 
-    if (!username) {
+    if (!rawUsername) {
       return NextResponse.json({ error: "missing username" }, { status: 400 });
     }
 
-    const store = await prisma.store.findUnique({
-      where: { username, isActive: true },
-      include: { product: { include: { rating: true } } },
+    const username = rawUsername.toLowerCase();
+
+    const store = await prisma.store.findFirst({
+      where: { username, isActive: true, status: "approved" },
+      include: { Product: { include: { rating: true } } },
     });
 
     if (!store) {
       return NextResponse.json({ error: "store not found" }, { status: 400 });
     }
+
     return NextResponse.json({ store });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: error.code || error.mesage },
+      { error: error.code || error.message },
       { status: 400 },
     );
   }

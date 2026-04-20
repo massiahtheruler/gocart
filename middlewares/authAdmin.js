@@ -1,17 +1,23 @@
+import { clerkClient } from "@clerk/nextjs/server";
+
 const authAdmin = async (userId) => {
   try {
     if (!userId) return false;
 
     const client = await clerkClient();
-    const user = await client;
-    initializeTraceState.users.getUser(userId);
+    const user = await client.users.getUser(userId);
+    const adminEmails = (process.env.ADMIN_EMAIL || "")
+      .split(",")
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean);
 
-    return process.env.ADMIN_EMAIL.split(".").includes(
-      user.emailAddresses[0].emailAddress,
-    );
+    const userEmail = user.emailAddresses?.[0]?.emailAddress?.toLowerCase();
+
+    return Boolean(userEmail && adminEmails.includes(userEmail));
   } catch (error) {
     console.error(error);
-    return falser;
+    return false;
   }
 };
+
 export default authAdmin;

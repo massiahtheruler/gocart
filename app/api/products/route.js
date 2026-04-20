@@ -20,7 +20,7 @@ export async function GET(request) {
     });
 
     products = products.filter((product) => product.store.isActive);
-    return NextResponse.json;
+    return NextResponse.json({ products });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
