@@ -1,5 +1,11 @@
 "use client";
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
+import {
+  Show,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import {
   ArrowRight,
   PackageIcon,
@@ -74,9 +80,11 @@ const Navbar = () => {
             </span>
             cart
             <span className="text-emerald-700 text-5xl leading-none">.</span>
-            <p className="absolute -right-8 -top-1 flex items-center rounded-full border border-emerald-200/80 bg-gradient-to-r from-emerald-600 to-emerald-500 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white shadow-[0_10px_28px_rgba(5,150,105,0.32)]">
-              +plus
-            </p>
+            <Show when={{ plan: "plus" }}>
+              <p className="absolute -right-8 -top-1 flex items-center rounded-full border border-emerald-200/80 bg-gradient-to-r from-emerald-600 to-emerald-500 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white shadow-[0_10px_28px_rgba(5,150,105,0.32)]">
+                +plus
+              </p>
+            </Show>
           </Link>
 
           <div className="hidden items-center gap-4 sm:flex lg:gap-7">

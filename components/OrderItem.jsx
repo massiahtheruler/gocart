@@ -6,12 +6,21 @@ import Rating from "./Rating";
 import { useState } from "react";
 import RatingModal from "./RatingModal";
 
+const statusStyles = {
+    ORDER_PLACED: "text-slate-500 bg-slate-100",
+    PROCESSING: "text-yellow-600 bg-yellow-100",
+    SHIPPED: "text-blue-600 bg-blue-100",
+    DELIVERED: "text-green-600 bg-green-100",
+};
+
 const OrderItem = ({ order }) => {
 
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
     const [ratingModal, setRatingModal] = useState(null);
 
     const { ratings } = useSelector(state => state.rating);
+    const statusLabel = order.status.replace(/_/g, ' ').toLowerCase();
+    const statusClassName = statusStyles[order.status] || statusStyles.ORDER_PLACED;
 
     return (
         <>
@@ -55,15 +64,10 @@ const OrderItem = ({ order }) => {
 
                 <td className="text-left space-y-2 text-sm max-md:hidden">
                     <div
-                        className={`flex items-center justify-center gap-1 rounded-full p-1 ${order.status === 'confirmed'
-                            ? 'text-yellow-500 bg-yellow-100'
-                            : order.status === 'delivered'
-                                ? 'text-green-500 bg-green-100'
-                                : 'text-slate-500 bg-slate-100'
-                            }`}
+                        className={`flex items-center justify-center gap-1 rounded-full p-1 ${statusClassName}`}
                     >
                         <DotIcon size={10} className="scale-250" />
-                        {order.status.split('_').join(' ').toLowerCase()}
+                        {statusLabel}
                     </div>
                 </td>
             </tr>
@@ -75,8 +79,8 @@ const OrderItem = ({ order }) => {
                     <p>{order.address.phone}</p>
                     <br />
                     <div className="flex items-center">
-                        <span className='text-center mx-auto px-6 py-1.5 rounded bg-green-100 text-green-700' >
-                            {order.status.replace(/_/g, ' ').toLowerCase()}
+                        <span className={`text-center mx-auto px-6 py-1.5 rounded ${statusClassName}`} >
+                            {statusLabel}
                         </span>
                     </div>
                 </td>

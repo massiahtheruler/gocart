@@ -9,19 +9,14 @@ export async function POST(request) {
     const isAdmin = await authAdmin(userId);
 
     if (!isAdmin) {
-      return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+      return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
 
     const { storeId } = await request.json();
-
-    if (!storeId) {
-      return NextResponse.json({ error: "Missing store ID" }, { status: 400 });
-    }
-
     const store = await prisma.store.findUnique({ where: { id: storeId } });
 
     if (!store) {
-      return NextResponse.json({ error: "Store not found" }, { status: 400 });
+      return NextResponse.json({ error: "store not found" }, { status: 404 });
     }
 
     await prisma.store.update({
@@ -29,7 +24,7 @@ export async function POST(request) {
       data: { isActive: !store.isActive },
     });
 
-    return NextResponse.json({ message: "Store updated successfully" });
+    return NextResponse.json({ message: "store updated successfully" });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -8,9 +8,13 @@ export async function GET(request) {
     const { userId } = getAuth(request);
     const storeId = await authSeller(userId);
 
+    if (!storeId) {
+      return NextResponse.json({ error: "not authorized" }, { status: 401 });
+    }
+
     const orders = await prisma.order.findMany({ where: { storeId } });
 
-    const products = await prisma.order.findMany({ where: { storeId } });
+    const products = await prisma.product.findMany({ where: { storeId } });
 
     const ratings = await prisma.rating.findMany({
       where: { productId: { in: products.map((product) => product.id) } },
@@ -23,8 +27,10 @@ export async function GET(request) {
       totalEarnings: Math.round(
         orders.reduce((acc, order) => acc + order.total, 0),
       ),
-      totalProducts: product.length,
+      totalProducts: products.length,
     };
+
+    return NextResponse.json({ dashboardData });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

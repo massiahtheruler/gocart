@@ -1,9 +1,8 @@
 "use client";
-import { storesDummyData } from "@/assets/assets";
 import StoreInfo from "@/components/admin/StoreInfo";
 import Loading from "@/components/Loading";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { headers } from "next/headers";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -24,8 +23,9 @@ export default function AdminStores() {
       setStores(data.stores);
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const toggleIsActive = async (storeId) => {

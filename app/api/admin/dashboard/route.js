@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET(request) {
   try {
     const { userId } = getAuth(request);
-    const isAdmin = await authAdmin(request);
+    const isAdmin = await authAdmin(userId);
 
     if (!isAdmin) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
@@ -14,27 +14,28 @@ export async function GET(request) {
 
     const orders = await prisma.order.count();
     const stores = await prisma.store.count();
+    const products = await prisma.product.count();
     const allOrders = await prisma.order.findMany({
       select: {
         createdAt: true,
         total: true,
       },
+      orderBy: { createdAt: "asc" },
     });
 
-    let totalRevenue = 0;
-    allOrders.forEach((order) => {
-      totalRevenue += order.total;
+    const revenue = allOrders
+      .reduce((total, order) => total + order.total, 0)
+      .toFixed(2);
+
+    return NextResponse.json({
+      dashboardData: {
+        orders,
+        stores,
+        products,
+        revenue,
+        allOrders,
+      },
     });
-    const revenue = totalRevenue.toFixed(2);
-    const products = await prisma.product.count();
-    const dashboardData = {
-      orders,
-      stores,
-      products,
-      revenue,
-      allOrders,
-    };
-    return NextResponse.json({ dashboardData });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

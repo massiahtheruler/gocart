@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { DeleteIcon } from "lucide-react";
-import { couponDummyData } from "@/assets/assets";
 import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
 
 export default function AdminCoupons() {
   const { getToken } = useAuth();
@@ -71,7 +71,7 @@ export default function AdminCoupons() {
       );
       if (!confirm) return;
       const token = await getToken();
-      await axios.delete("/api/admin/coupon?code=${code}", {
+      await axios.delete(`/api/admin/coupon?code=${code}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,7 +86,7 @@ export default function AdminCoupons() {
 
   useEffect(() => {
     fetchCoupons();
-  }, []);
+  }, [getToken]);
 
   return (
     <div className="text-slate-500 mb-40">

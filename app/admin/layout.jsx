@@ -1,23 +1,22 @@
 import AdminLayout from "@/components/admin/AdminLayout";
-import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 export const metadata = {
   title: "GoCart. - Admin",
   description: "GoCart. - Admin",
 };
 
-export default function RootAdminLayout({ children }) {
-  return (
-    <>
-      {" "}
-      <SignedIn>
-        <AdminLayout>{children}</AdminLayout>
-      </SignedIn>
-      <SignedOut>
-        <div className="min-h-screen flex items-center justify-center">
-          <SignIn fallbackRedirectUrl="/admin" routing="/hash" />
-        </div>
-      </SignedOut>
-    </>
-  );
+export default async function RootAdminLayout({ children }) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <SignIn fallbackRedirectUrl="/admin" routing="hash" />
+      </div>
+    );
+  }
+
+  return <AdminLayout>{children}</AdminLayout>;
 }

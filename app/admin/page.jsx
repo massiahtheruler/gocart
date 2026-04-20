@@ -1,8 +1,8 @@
 "use client";
-import { dummyAdminDashboardData } from "@/assets/assets";
 import Loading from "@/components/Loading";
 import OrdersAreaChart from "@/components/OrdersAreaChart";
 import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
 import {
   CircleDollarSignIcon,
   ShoppingBasketIcon,
@@ -10,6 +10,7 @@ import {
   TagsIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
   const { getToken } = useAuth();
@@ -49,8 +50,9 @@ export default function AdminDashboard() {
       setDashboardData(data.dashboardData);
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {

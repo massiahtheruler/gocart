@@ -8,7 +8,7 @@ export async function GET(request) {
     const isAdmin = await authAdmin(userId);
 
     if (!isAdmin) {
-      return NextResponse.json({ error: "mot authorized" }, { status: 401 });
+      return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
 
     return NextResponse.json({ isAdmin });
