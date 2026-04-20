@@ -4,10 +4,14 @@ import { NextResponse } from "next/server";
 import { openai } from "@/config/openai";
 
 async function main(base64Image, mimeType) {
+  if (!process.env.OPENAI_MODEL) {
+    throw new Error("OPENAI_MODEL is not configured");
+  }
+
   const messages = [
     {
       role: "system",
-      content: `You are a product listing assistant for an e-commerce store. Your job is to analyze an image of a product and generate structured data. Respond ONLY with raw JSON (no code block, no markdown, no explanation). The JSON must stictly follow this schema: 
+      content: `You are a product listing assistant for an e-commerce store. Your job is to analyze an image of a product and generate structured data. Respond ONLY with raw JSON (no code block, no markdown, no explanation). The JSON must strictly follow this schema: 
      {
      "name": string, // Short Product name
      "description": string, // Marketing-friendly
@@ -35,18 +39,26 @@ async function main(base64Image, mimeType) {
     messages,
   });
 
-  response.choices[0].message.content;
-  const cleaned = raw.replace(/```json```/g, "").trim();
+  const raw = response.choices?.[0]?.message?.content;
+
+  if (!raw) {
+    throw new Error("AI did not return any content");
+  }
+
+  const cleaned = raw
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
 
   let parsed;
   try {
     parsed = JSON.parse(cleaned);
   } catch (error) {
-    {
-      throw new Error("AI did not return valid JSON");
-    }
-    return parsed;
+    throw new Error("AI did not return valid JSON");
   }
+
+  return parsed;
 }
 export async function POST(request) {
   try {
@@ -55,7 +67,15 @@ export async function POST(request) {
     if (!isSeller) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
-    const { base64Image, mieType } = await request.json();
+    const { base64Image, mimeType } = await request.json();
+
+    if (!base64Image || !mimeType) {
+      return NextResponse.json(
+        { error: "missing image data" },
+        { status: 400 },
+      );
+    }
+
     const result = await main(base64Image, mimeType);
     return NextResponse.json({ ...result });
   } catch (error) {

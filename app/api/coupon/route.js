@@ -2,6 +2,26 @@ import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 
+export async function GET() {
+  try {
+    const coupons = await prisma.coupon.findMany({
+      where: {
+        isPublic: true,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: [{ discount: "desc" }, { expiresAt: "asc" }],
+    });
+
+    return NextResponse.json({ coupons });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: error.code || error.message },
+      { status: 400 },
+    );
+  }
+}
+
 export async function POST(request) {
   try {
     const { userId, has } = getAuth(request);

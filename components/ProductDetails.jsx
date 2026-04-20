@@ -1,12 +1,16 @@
 'use client'
 
 import { addToCart } from "@/lib/features/cart/cartSlice";
+import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { StarIcon, TagIcon, EarthIcon, CreditCardIcon, UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Counter from "./Counter";
 import { useDispatch, useSelector } from "react-redux";
+import RatingModal from "./RatingModal";
+import Rating from "./Rating";
+import axios from "axios";
 
 const ProductDetails = ({ product }) => {
 
@@ -14,17 +18,71 @@ const ProductDetails = ({ product }) => {
     const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
 
     const cart = useSelector(state => state.cart.cartItems);
+    const { ratings } = useSelector(state => state.rating);
     const dispatch = useDispatch();
+    const { user } = useUser();
+    const { openSignIn } = useClerk();
+    const { getToken } = useAuth();
 
     const router = useRouter()
 
     const [mainImage, setMainImage] = useState(product.images[0]);
+    const [deliveredOrderId, setDeliveredOrderId] = useState(null);
+    const [ratingModal, setRatingModal] = useState(null);
 
     const addToCartHandler = () => {
+        if (!user) {
+            openSignIn();
+            return;
+        }
         dispatch(addToCart({ productId }))
     }
 
-    const averageRating = product.rating.reduce((acc, item) => acc + item.rating, 0) / product.rating.length;
+    const handleCartClick = () => {
+        if (!user) {
+            openSignIn();
+            return;
+        }
+        if (!cart[productId]) {
+            addToCartHandler();
+            return;
+        }
+        router.push('/cart')
+    }
+
+    const averageRating = product.rating.length
+        ? product.rating.reduce((acc, item) => acc + item.rating, 0) / product.rating.length
+        : 0;
+
+    const existingReview = useMemo(() => (
+        ratings.find((item) => item.productId === product.id)
+    ), [ratings, product.id]);
+
+    useEffect(() => {
+        const fetchEligibility = async () => {
+            try {
+                const token = await getToken();
+                const { data } = await axios.get('/api/orders', {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+
+                const matchingDeliveredOrder = data.orders.find((order) =>
+                    order.status === 'DELIVERED' &&
+                    order.orderItems.some((item) => item.product.id === product.id),
+                )
+
+                setDeliveredOrderId(matchingDeliveredOrder?.id || null)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        if (user) {
+            fetchEligibility()
+        } else {
+            setDeliveredOrderId(null)
+        }
+    }, [user, getToken, product.id])
     
     return (
         <div className="flex max-lg:flex-col gap-12">
@@ -48,6 +106,30 @@ const ProductDetails = ({ product }) => {
                     ))}
                     <p className="text-sm ml-3 text-slate-500">{product.rating.length} Reviews</p>
                 </div>
+                {deliveredOrderId && (
+                    <div className="mt-4 flex items-center gap-3">
+                        {existingReview ? (
+                            <>
+                                <Rating value={existingReview.rating} />
+                                <button
+                                    type="button"
+                                    onClick={() => setRatingModal(existingReview)}
+                                    className="text-sm font-medium text-emerald-600 transition hover:text-emerald-700"
+                                >
+                                    Edit your review
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => setRatingModal({ orderId: deliveredOrderId, productId: product.id })}
+                                className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100"
+                            >
+                                Write a review
+                            </button>
+                        )}
+                    </div>
+                )}
                 <div className="flex items-start my-6 gap-3 text-2xl font-semibold text-slate-800">
                     <p> {currency}{product.price} </p>
                     <p className="text-xl text-slate-500 line-through">{currency}{product.mrp}</p>
@@ -65,7 +147,7 @@ const ProductDetails = ({ product }) => {
                             </div>
                         )
                     }
-                    <button onClick={() => !cart[productId] ? addToCartHandler() : router.push('/cart')} className="bg-slate-800 text-white px-10 py-3 text-sm font-medium rounded hover:bg-slate-900 active:scale-95 transition">
+                    <button onClick={handleCartClick} className="bg-slate-800 text-white px-10 py-3 text-sm font-medium rounded hover:bg-slate-900 active:scale-95 transition">
                         {!cart[productId] ? 'Add to Cart' : 'View Cart'}
                     </button>
                 </div>
@@ -77,6 +159,9 @@ const ProductDetails = ({ product }) => {
                 </div>
 
             </div>
+            {ratingModal && (
+                <RatingModal ratingModal={ratingModal} setRatingModal={setRatingModal} />
+            )}
         </div>
     )
 }

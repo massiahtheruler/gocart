@@ -3,9 +3,13 @@ import Loading from "@/components/Loading";
 import { useAuth } from "@clerk/nextjs";
 import {
   CircleDollarSignIcon,
+  Package,
+  Package2,
+  PackageCheck,
   ShoppingBasketIcon,
   StarIcon,
   TagsIcon,
+  Truck,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -39,7 +43,11 @@ export default function Dashboard() {
       value: currency + dashboardData.totalEarnings,
       icon: CircleDollarSignIcon,
     },
-    { title: "Total Orders", value: dashboardData.totalOrders, icon: TagsIcon },
+    {
+      title: "Total Orders",
+      value: dashboardData.totalOrders,
+      icon: PackageCheck,
+    },
     {
       title: "Total Ratings",
       value: dashboardData.ratings.length,
@@ -77,7 +85,8 @@ export default function Dashboard() {
         {dashboardCardsData.map((card, index) => (
           <div
             key={index}
-            className="flex items-center gap-11 border border-slate-200 p-3 px-6 rounded-lg"
+            className="motion-section flex items-center gap-11 border border-slate-200 p-3 px-6 rounded-lg"
+            style={{ animationDelay: `${80 + index * 80}ms` }}
           >
             <div className="flex flex-col gap-3 text-xs">
               <p>{card.title}</p>
@@ -99,7 +108,8 @@ export default function Dashboard() {
         {dashboardData.ratings.map((review, index) => (
           <div
             key={index}
-            className="flex max-sm:flex-col gap-5 sm:items-center justify-between py-6 border-b border-slate-200 text-sm text-slate-600 max-w-4xl"
+            className="motion-section flex max-sm:flex-col gap-5 sm:items-center justify-between py-6 border-b border-slate-200 text-sm text-slate-600 max-w-4xl"
+            style={{ animationDelay: `${220 + index * 70}ms` }}
           >
             <div>
               <div className="flex gap-3">

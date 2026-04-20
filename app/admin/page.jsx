@@ -72,7 +72,8 @@ export default function AdminDashboard() {
         {dashboardCardsData.map((card, index) => (
           <div
             key={index}
-            className="flex items-center gap-10 p-3 px-6 border rounded-lg border-slate-200"
+            className="motion-section flex items-center gap-10 p-3 px-6 border rounded-lg border-slate-200"
+            style={{ animationDelay: `${80 + index * 80}ms` }}
           >
             <div className="flex flex-col gap-3 text-xs">
               <p>{card.title}</p>
@@ -89,7 +90,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Area Chart */}
-      <OrdersAreaChart allOrders={dashboardData.allOrders} />
+      <div className="motion-section" style={{ animationDelay: "420ms" }}>
+        <OrdersAreaChart allOrders={dashboardData.allOrders} />
+      </div>
     </div>
   );
 }

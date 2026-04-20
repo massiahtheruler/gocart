@@ -2,15 +2,21 @@
 
 import { usePathname } from "next/navigation";
 import {
+  DollarSign,
   HomeIcon,
+  LucideTicketPercent,
   ShieldCheckIcon,
   StoreIcon,
+  Tags,
+  TagsIcon,
+  TicketPercent,
   TicketPercentIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { assets } from "@/assets/assets";
 import { useUser } from "@clerk/nextjs";
+import { updateTag } from "next/cache";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
@@ -20,7 +26,7 @@ const AdminSidebar = () => {
     { name: "Dashboard", href: "/admin", icon: HomeIcon },
     { name: "Stores", href: "/admin/stores", icon: StoreIcon },
     { name: "Approve Store", href: "/admin/approve", icon: ShieldCheckIcon },
-    { name: "Coupons", href: "/admin/coupons", icon: TicketPercentIcon },
+    { name: "Coupons", href: "/admin/coupons", icon: Tags },
   ];
 
   return (

@@ -1,4 +1,5 @@
 "use client";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { addToCart, removeFromCart } from "@/lib/features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -6,12 +7,22 @@ const Counter = ({ productId }) => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
+  const { user } = useUser();
+  const { openSignIn } = useClerk();
 
   const addToCartHandler = () => {
+    if (!user) {
+      openSignIn();
+      return;
+    }
     dispatch(addToCart({ productId }));
   };
 
   const removeFromCartHandler = () => {
+    if (!user) {
+      openSignIn();
+      return;
+    }
     dispatch(removeFromCart({ productId }));
   };
 

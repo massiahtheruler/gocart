@@ -5,7 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Show, useAuth, useUser } from "@clerk/nextjs";
+import { Show, useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { fetchCart } from "@/lib/features/cart/cartSlice";
 
 const OrderSummary = ({ totalPrice, items }) => {
@@ -16,6 +16,7 @@ const OrderSummary = ({ totalPrice, items }) => {
   const router = useRouter();
   const { user } = useUser();
   const { getToken } = useAuth();
+  const { openSignIn } = useClerk();
   const dispatch = useDispatch();
 
   const addressList = useSelector((state) =>
@@ -39,7 +40,8 @@ const OrderSummary = ({ totalPrice, items }) => {
     event.preventDefault();
     try {
       if (!user) {
-        return toast.error("Please login to proceed");
+        openSignIn();
+        return;
       }
       const token = await getToken();
       const { data } = await axios.post(
@@ -62,7 +64,8 @@ const OrderSummary = ({ totalPrice, items }) => {
     e.preventDefault();
     try {
       if (!user) {
-        return toast("please login to place an order");
+        openSignIn();
+        return;
       }
       if (!selectedAddress) {
         return toast("Please select an address");
@@ -188,7 +191,22 @@ const OrderSummary = ({ totalPrice, items }) => {
             {coupon && <p>{`-${formatCurrency(discountAmount)}`}</p>}
           </div>
         </div>
-        {!coupon ? (
+        {coupon ? (
+          <div className="w-full flex items-center justify-center gap-2 text-xs mt-2">
+            <p>
+              Code:{" "}
+              <span className="font-semibold ml-1">
+                {coupon.code.toUpperCase()}
+              </span>
+            </p>
+            <p>{coupon.description}</p>
+            <XIcon
+              size={18}
+              onClick={() => setCoupon(null)}
+              className="hover:text-red-700 transition cursor-pointer"
+            />
+          </div>
+        ) : (
           <form
             onSubmit={(e) =>
               toast.promise(handleCouponCode(e), {
@@ -208,21 +226,6 @@ const OrderSummary = ({ totalPrice, items }) => {
               Apply
             </button>
           </form>
-        ) : (
-          <div className="w-full flex items-center justify-center gap-2 text-xs mt-2">
-            <p>
-              Code:{" "}
-              <span className="font-semibold ml-1">
-                {coupon.code.toUpperCase()}
-              </span>
-            </p>
-            <p>{coupon.description}</p>
-            <XIcon
-              size={18}
-              onClick={() => setCoupon(null)}
-              className="hover:text-red-700 transition cursor-pointer"
-            />
-          </div>
         )}
       </div>
       <div className="flex justify-between py-4">

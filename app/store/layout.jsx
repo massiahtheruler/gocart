@@ -19,6 +19,8 @@ export default async function RootStoreLayout({ children }) {
   }
 
   return (
-    <StoreLayout>{children}</StoreLayout>
+    <StoreLayout>
+      <main className="page-float-in">{children}</main>
+    </StoreLayout>
   );
 }

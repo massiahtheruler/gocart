@@ -1,9 +1,11 @@
 "use client";
+import AboutContactModal from "@/components/AboutContactModal";
 import {
   Show,
   SignInButton,
   SignUpButton,
   UserButton,
+  useClerk,
   useUser,
 } from "@clerk/nextjs";
 import {
@@ -20,15 +22,32 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { user } = useUser();
+  const { openSignIn } = useClerk();
   const router = useRouter();
 
   const [search, setSearch] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [activeInfoPanel, setActiveInfoPanel] = useState("about");
   const cartCount = useSelector((state) => state.cart.total);
 
   const handleSearch = (e) => {
     e.preventDefault();
     router.push(`/shop?search=${search}`);
+  };
+
+  const handleProtectedNavigation = (path) => {
+    if (!user) {
+      openSignIn();
+      return;
+    }
+
+    router.push(path);
+  };
+
+  const openInfoModal = (panel) => {
+    setActiveInfoPanel(panel);
+    setIsInfoModalOpen(true);
   };
 
   useEffect(() => {
@@ -101,18 +120,20 @@ const Navbar = () => {
               >
                 Shop
               </Link>
-              <Link
-                href="/"
+              <button
+                type="button"
+                onClick={() => openInfoModal("about")}
                 className="nav-link-soft rounded-full px-4 py-2 text-sm font-medium text-slate-500 hover:bg-white/70 hover:text-slate-800"
               >
                 About
-              </Link>
-              <Link
-                href="/"
+              </button>
+              <button
+                type="button"
+                onClick={() => openInfoModal("contact")}
                 className="nav-link-soft rounded-full px-4 py-2 text-sm font-medium text-slate-500 hover:bg-white/70 hover:text-slate-800"
               >
                 Contact
-              </Link>
+              </button>
             </div>
 
             <form
@@ -130,8 +151,9 @@ const Navbar = () => {
               />
             </form>
 
-            <Link
-              href="/cart"
+            <button
+              type="button"
+              onClick={() => handleProtectedNavigation("/cart")}
               className="glass-lift glass-sheen overflow-visible relative flex items-center gap-2 rounded-full px-4 py-3 text-sm font-medium text-slate-700 hover:text-slate-900"
             >
               <ShoppingCart size={18} />
@@ -139,7 +161,7 @@ const Navbar = () => {
               <span className="absolute -right-1 -top-1 inline-flex size-5 items-center justify-center rounded-full border border-white/80 bg-slate-900 text-[10px] font-semibold text-white shadow-lg">
                 {cartCount}
               </span>
-            </Link>
+            </button>
 
             <div className="flex items-center gap-3">
               {!user ? (
@@ -176,14 +198,7 @@ const Navbar = () => {
                 </UserButton>
               )}
 
-              {!user ? (
-                <SignUpButton mode="modal">
-                  <button className="emerald-cta glass-sheen inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-white">
-                    Sign up
-                    <ArrowRight size={14} />
-                  </button>
-                </SignUpButton>
-              ) : (
+              {user ? (
                 <button
                   onClick={() => router.push("/store")}
                   className="emerald-cta glass-sheen inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-white"
@@ -191,20 +206,28 @@ const Navbar = () => {
                   Store
                   <ArrowRight size={14} />
                 </button>
+              ) : (
+                <SignUpButton mode="modal">
+                  <button className="emerald-cta glass-sheen inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-white">
+                    Sign up
+                    <ArrowRight size={14} />
+                  </button>
+                </SignUpButton>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-3 sm:hidden">
-            <Link
-              href="/cart"
+            <button
+              type="button"
+              onClick={() => handleProtectedNavigation("/cart")}
               className="glass-lift glass-sheen relative flex items-center rounded-full overflow-visible p-3 text-slate-700"
             >
               <ShoppingCart size={18} />
               <span className="absolute -right-1 -top-1 inline-flex overflow-visible size-5 items-center justify-center rounded-full border border-white/80 bg-slate-900 text-[10px] font-semibold text-white">
                 {cartCount}
               </span>
-            </Link>
+            </button>
 
             {!user ? (
               <SignInButton mode="modal">
@@ -239,6 +262,12 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <AboutContactModal
+        isOpen={isInfoModalOpen}
+        activePanel={activeInfoPanel}
+        onClose={() => setIsInfoModalOpen(false)}
+        onSelectPanel={setActiveInfoPanel}
+      />
     </nav>
   );
 };

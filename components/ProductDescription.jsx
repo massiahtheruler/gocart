@@ -28,7 +28,23 @@ const ProductDescription = ({ product }) => {
             {/* Reviews */}
             {selectedTab === "Reviews" && (
                 <div className="flex flex-col gap-3 mt-14">
-                    {product.rating.map((item,index) => (
+                    <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/70 p-5 shadow-sm">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h3 className="text-base font-semibold text-slate-800">
+                                    Customer reviews
+                                </h3>
+                                <p className="text-sm text-slate-500">
+                                    {product.rating.length} review{product.rating.length === 1 ? "" : "s"} for this product
+                                </p>
+                            </div>
+                            <Link href="/reviews" className="section-link inline-flex items-center gap-1 text-sm font-medium text-emerald-600">
+                                View all reviews <ArrowRight size={14} className="showroom-arrow text-emerald-600" />
+                            </Link>
+                        </div>
+                    </div>
+
+                    {product.rating.length > 0 ? product.rating.map((item,index) => (
                         <div key={index} className="flex gap-5 mb-10">
                             <Image src={item.user.image} alt="" className="size-10 rounded-full" width={100} height={100} />
                             <div>
@@ -42,7 +58,11 @@ const ProductDescription = ({ product }) => {
                                 <p className="mt-3 font-light">{new Date(item.createdAt).toDateString()}</p>
                             </div>
                         </div>
-                    ))}
+                    )) : (
+                        <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50/80 px-6 py-12 text-center text-slate-400">
+                            No reviews yet for this product.
+                        </div>
+                    )}
                 </div>
             )}
 

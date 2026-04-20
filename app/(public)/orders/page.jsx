@@ -7,10 +7,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setRatings } from "@/lib/features/rating/ratingSlice";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const { getToken } = useAuth();
@@ -29,12 +32,20 @@ export default function Orders() {
     const fetchOrders = async () => {
       try {
         const token = await getToken();
-        const { data } = await axios.get("/api/orders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setOrders(data.orders);
+        const [ordersResponse, ratingsResponse] = await Promise.all([
+          axios.get("/api/orders", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get("/api/ratings", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        ]);
+        setOrders(ordersResponse.data.orders);
+        dispatch(setRatings(ratingsResponse.data.ratings || []));
       } catch (error) {
         toast.error(error?.response?.data?.error || error.message);
       } finally {
@@ -50,7 +61,7 @@ export default function Orders() {
         router.push("/");
       }
     }
-  }, [isLoaded, user, getToken, router]);
+  }, [isLoaded, user, getToken, router, dispatch]);
 
   if (!isLoaded || loading) {
     return <Loading />;

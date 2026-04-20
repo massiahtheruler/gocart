@@ -18,5 +18,9 @@ export default async function RootAdminLayout({ children }) {
     );
   }
 
-  return <AdminLayout>{children}</AdminLayout>;
+  return (
+    <AdminLayout>
+      <main className="page-float-in">{children}</main>
+    </AdminLayout>
+  );
 }

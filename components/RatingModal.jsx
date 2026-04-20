@@ -1,33 +1,54 @@
 'use client'
 
+import axios from 'axios';
+import { useAuth } from '@clerk/nextjs';
 import { Star } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { XIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { upsertRating } from '@/lib/features/rating/ratingSlice';
 
 const RatingModal = ({ ratingModal, setRatingModal }) => {
-
+    const dispatch = useDispatch();
+    const { getToken } = useAuth();
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
 
+    useEffect(() => {
+        setRating(ratingModal?.rating || 0)
+        setReview(ratingModal?.review || '')
+    }, [ratingModal])
+
     const handleSubmit = async () => {
-        if (rating < 0 || rating > 5) {
+        if (rating < 1 || rating > 5) {
             return toast('Please select a rating');
         }
         if (review.length < 5) {
             return toast('write a short review');
         }
 
+        const token = await getToken();
+        const { data } = await axios.post('/api/ratings', {
+            orderId: ratingModal.orderId,
+            productId: ratingModal.productId,
+            rating,
+            review,
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        dispatch(upsertRating(data.rating))
         setRatingModal(null);
     }
 
     return (
-        <div className='fixed inset-0 z-120 flex items-center justify-center bg-black/10'>
+        <div className='fixed inset-0 z-[120] flex items-center justify-center bg-black/10'>
             <div className='bg-white p-8 rounded-lg shadow-lg w-96 relative'>
                 <button onClick={() => setRatingModal(null)} className='absolute top-3 right-3 text-gray-500 hover:text-gray-700'>
                     <XIcon size={20} />
                 </button>
-                <h2 className='text-xl font-medium text-slate-600 mb-4'>Rate Product</h2>
+                <h2 className='text-xl font-medium text-slate-600 mb-4'>{ratingModal?.id ? 'Edit Review' : 'Rate Product'}</h2>
                 <div className='flex items-center justify-center mb-4'>
                     {Array.from({ length: 5 }, (_, i) => (
                         <Star
@@ -44,8 +65,8 @@ const RatingModal = ({ ratingModal, setRatingModal }) => {
                     value={review}
                     onChange={(e) => setReview(e.target.value)}
                 ></textarea>
-                <button onClick={e => toast.promise(handleSubmit(), { loading: 'Submitting...' })} className='w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition'>
-                    Submit Rating
+                <button onClick={e => toast.promise(handleSubmit(), { loading: ratingModal?.id ? 'Updating...' : 'Submitting...' })} className='w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition'>
+                    {ratingModal?.id ? 'Update Review' : 'Submit Rating'}
                 </button>
             </div>
         </div>

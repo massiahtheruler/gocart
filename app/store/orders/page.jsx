@@ -1,4 +1,5 @@
 "use client";
+import OrderStatusBadge from "@/components/OrderStatusBadge";
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { useAuth } from "@clerk/nextjs";
@@ -130,18 +131,24 @@ export default function StoreOrders() {
                       e.stopPropagation();
                     }}
                   >
-                    <select
-                      value={order.status}
-                      onChange={(e) =>
-                        updateOrderStatus(order.id, e.target.value)
-                      }
-                      className="rounded-md border-gray-300 text-sm focus:ring focus:ring-blue-200"
-                    >
-                      <option value="ORDER_PLACED">ORDER_PLACED</option>
-                      <option value="PROCESSING">PROCESSING</option>
-                      <option value="SHIPPED">SHIPPED</option>
-                      <option value="DELIVERED">DELIVERED</option>
-                    </select>
+                    <div className="flex min-w-40 flex-col gap-2">
+                      <OrderStatusBadge
+                        status={order.status}
+                        className="cursor-pointer ring-1 ring-slate-200 transition hover:ring-blue-300"
+                      />
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          updateOrderStatus(order.id, e.target.value)
+                        }
+                        className="cursor-pointer rounded-md border border-blue-200 bg-blue-50/70 text-sm text-slate-700 focus:ring focus:ring-blue-200"
+                      >
+                        <option value="ORDER_PLACED">ORDER_PLACED</option>
+                        <option value="PROCESSING">PROCESSING</option>
+                        <option value="SHIPPED">SHIPPED</option>
+                        <option value="DELIVERED">DELIVERED</option>
+                      </select>
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-gray-500">
                     {new Date(order.createdAt).toLocaleString()}
@@ -195,7 +202,9 @@ export default function StoreOrders() {
                     className="flex items-center gap-4 rounded border border-slate-100 p-2 shadow"
                   >
                     <img
-                      src={item.product.images?.[0].src || item.product.images?.[0]}
+                      src={
+                        item.product.images?.[0].src || item.product.images?.[0]
+                      }
                       alt={item.product?.name}
                       className="h-16 w-16 rounded object-cover"
                     />
@@ -221,12 +230,13 @@ export default function StoreOrders() {
               {selectedOrder.isCouponUsed && (
                 <p>
                   <span className="text-green-700">Coupon:</span>{" "}
-                  {selectedOrder.coupon.code} ({selectedOrder.coupon.discount}% off)
+                  {selectedOrder.coupon.code} ({selectedOrder.coupon.discount}%
+                  off)
                 </p>
               )}
               <p>
                 <span className="text-green-700">Status:</span>{" "}
-                {selectedOrder.status}
+                <OrderStatusBadge status={selectedOrder.status} className="ml-2" />
               </p>
               <p>
                 <span className="text-green-700">Order Date:</span>{" "}
