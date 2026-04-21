@@ -5,6 +5,7 @@ import {
   DollarSign,
   HomeIcon,
   LucideTicketPercent,
+  MessageSquareText,
   ShieldCheckIcon,
   StoreIcon,
   Tags,
@@ -26,6 +27,7 @@ const AdminSidebar = () => {
     { name: "Dashboard", href: "/admin", icon: HomeIcon },
     { name: "Stores", href: "/admin/stores", icon: StoreIcon },
     { name: "Approve Store", href: "/admin/approve", icon: ShieldCheckIcon },
+    { name: "Reviews", href: "/admin/reviews", icon: MessageSquareText },
     { name: "Coupons", href: "/admin/coupons", icon: Tags },
   ];
 

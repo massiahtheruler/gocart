@@ -46,8 +46,8 @@ const CategoriesMarquee = () => {
           : event.deltaY;
 
       targetVelocityRef.current = Math.max(
-        -10.2,
-        Math.min(20.2, targetVelocityRef.current + dominantDelta * 0.448),
+        -18.2,
+        Math.min(30.2, targetVelocityRef.current + dominantDelta * 0.448),
       );
     };
 
@@ -63,8 +63,8 @@ const CategoriesMarquee = () => {
   }, []);
 
   return (
-    <div className="group relative mx-auto w-full max-w-7xl select-none overflow-hidden sm:my-20">
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-white via-white/90 to-transparent" />
+    <div className="group relative mx-auto w-full select-none overflow-hidden sm:my-20 ">
+      <div className="marquee-edge-mask marquee-edge-mask--left pointer-events-none absolute left-0 top-0 z-10 h-full w-24 md:w-32" />
       <div className="pointer-events-none absolute inset-y-0 left-[10%] w-48 rounded-full bg-emerald-200/25 blur-3xl" />
       <div className="pointer-events-none absolute inset-y-0 right-[12%] w-56 rounded-full bg-sky-200/20 blur-3xl" />
 
@@ -77,7 +77,7 @@ const CategoriesMarquee = () => {
             <Link
               href={`/shop?category=${encodeURIComponent(company)}`}
               key={`${company}-${index}`}
-              className="marquee-chip glass-sheen shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-xs font-semibold tracking-[0.02em] text-slate-700 sm:px-6 sm:py-3 sm:text-sm"
+              className="marquee-chip shrink-0 whitespace-nowrap rounded-full px-5 py-2 text-xs font-semibold tracking-[0.02em] text-slate-700 sm:px-6 sm:py-3 sm:text-sm"
               aria-hidden={index >= categories.length}
               tabIndex={index >= categories.length ? -1 : 0}
             >
@@ -87,7 +87,7 @@ const CategoriesMarquee = () => {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-white via-white/90 to-transparent md:w-40" />
+      <div className="marquee-edge-mask marquee-edge-mask--right pointer-events-none absolute right-0 top-0 z-10 h-full w-24 md:w-44" />
     </div>
   );
 };

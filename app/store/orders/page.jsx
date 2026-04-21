@@ -5,12 +5,15 @@ import Loading from "@/components/Loading";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function StoreOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrderIds, setSelectedOrderIds] = useState([]);
+  const [bulkStatus, setBulkStatus] = useState("PROCESSING");
   const { getToken } = useAuth();
 
   const fetchOrders = async () => {
@@ -27,19 +30,24 @@ export default function StoreOrders() {
     }
   };
 
-  const updateOrderStatus = async (orderId, status) => {
+  const updateOrderStatus = async (orderIds, status) => {
     try {
       const token = await getToken();
       const { data } = await axios.post(
         "/api/store/orders",
-        { orderId, status },
+        {
+          orderIds: Array.isArray(orderIds) ? orderIds : [orderIds],
+          status,
+        },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
       setOrders((prev) =>
         prev.map((order) =>
-          order.id === orderId ? { ...order, status } : order,
+          (Array.isArray(orderIds) ? orderIds : [orderIds]).includes(order.id)
+            ? { ...order, status }
+            : order,
         ),
       );
       toast.success(data.message);
@@ -58,6 +66,30 @@ export default function StoreOrders() {
     setIsModalOpen(false);
   };
 
+  const toggleSelectedOrder = (orderId) => {
+    setSelectedOrderIds((prev) =>
+      prev.includes(orderId)
+        ? prev.filter((id) => id !== orderId)
+        : [...prev, orderId],
+    );
+  };
+
+  const toggleSelectAll = () => {
+    setSelectedOrderIds((prev) =>
+      prev.length === orders.length ? [] : orders.map((order) => order.id),
+    );
+  };
+
+  const applyBulkStatus = async () => {
+    if (selectedOrderIds.length === 0) {
+      toast.error("Select at least one order");
+      return;
+    }
+
+    await updateOrderStatus(selectedOrderIds, bulkStatus);
+    setSelectedOrderIds([]);
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -69,16 +101,46 @@ export default function StoreOrders() {
       <h1 className="mb-5 text-2xl text-slate-500">
         Store <span className="font-medium text-slate-800">Orders</span>
       </h1>
+      {orders.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm">
+          <p className="text-sm text-slate-600">
+            {selectedOrderIds.length} selected
+          </p>
+          <select
+            value={bulkStatus}
+            onChange={(e) => setBulkStatus(e.target.value)}
+            className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
+          >
+            <option value="ORDER_PLACED">ORDER_PLACED</option>
+            <option value="PROCESSING">PROCESSING</option>
+            <option value="SHIPPED">SHIPPED</option>
+            <option value="DELIVERED">DELIVERED</option>
+          </select>
+          <button
+            type="button"
+            onClick={() =>
+              toast.promise(applyBulkStatus(), {
+                loading: "Updating orders...",
+              })
+            }
+            className="control-button control-button--primary rounded-full px-4 py-2 text-sm font-medium text-white"
+          >
+            Apply to selected
+          </button>
+        </div>
+      )}
       {orders.length === 0 ? (
         <p>No orders found</p>
       ) : (
-        <div className="max-w-4xl overflow-x-auto rounded-md border border-gray-200 shadow">
-          <table className="w-full text-left text-sm text-gray-600">
-            <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-700">
+        <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white/85 shadow-sm">
+          <table className="w-full min-w-[1080px] text-left text-sm text-gray-600">
+            <thead className="bg-slate-50 text-xs uppercase tracking-wider text-gray-700">
               <tr>
                 {[
+                  "",
                   "Sr. No.",
                   "Customer",
+                  "Products",
                   "Total",
                   "Payment",
                   "Paid",
@@ -87,7 +149,16 @@ export default function StoreOrders() {
                   "Date",
                 ].map((heading, i) => (
                   <th key={i} className="px-4 py-3">
-                    {heading}
+                    {heading === "" ? (
+                      <input
+                        type="checkbox"
+                        checked={selectedOrderIds.length === orders.length}
+                        onChange={toggleSelectAll}
+                        aria-label="Select all orders"
+                      />
+                    ) : (
+                      heading
+                    )}
                   </th>
                 ))}
               </tr>
@@ -99,8 +170,58 @@ export default function StoreOrders() {
                   className="cursor-pointer transition-colors duration-150 hover:bg-gray-50"
                   onClick={() => openModal(order)}
                 >
+                  <td
+                    className="px-4 py-3"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedOrderIds.includes(order.id)}
+                      onChange={() => toggleSelectedOrder(order.id)}
+                      aria-label={`Select order ${order.id}`}
+                    />
+                  </td>
                   <td className="pl-6 text-green-600">{index + 1}</td>
                   <td className="px-4 py-3">{order.user?.name}</td>
+                  <td className="px-4 py-3">
+                    <div className="space-y-3">
+                      {order.orderItems.slice(0, 2).map((item) => (
+                        <div
+                          key={item.id}
+                          className="flex items-center gap-3 rounded-2xl bg-slate-50 px-3 py-2"
+                        >
+                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm">
+                            <Image
+                              src={
+                                item.product.images?.[0]?.src ||
+                                item.product.images?.[0]
+                              }
+                              alt={item.product?.name || "Product"}
+                              width={48}
+                              height={48}
+                              className="h-10 w-auto rounded-lg object-contain"
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate font-medium text-slate-800">
+                              {item.product?.name}
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              Qty {item.quantity} · ${item.price}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                      {order.orderItems.length > 2 && (
+                        <p className="text-xs font-medium text-slate-500">
+                          +{order.orderItems.length - 2} more item
+                          {order.orderItems.length - 2 === 1 ? "" : "s"}
+                        </p>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-3 font-medium text-slate-800">
                     ${order.total}
                   </td>
@@ -167,7 +288,7 @@ export default function StoreOrders() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg"
+            className="relative w-full max-w-3xl rounded-3xl bg-white p-6 shadow-lg"
           >
             <h2 className="mb-4 text-center text-xl font-semibold text-slate-900">
               Order Details

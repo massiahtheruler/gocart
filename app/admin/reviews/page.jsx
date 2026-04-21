@@ -4,28 +4,29 @@ import Loading from "@/components/Loading";
 import Rating from "@/components/Rating";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
-import { MessageSquareText, Search, Star } from "lucide-react";
+import { MessageSquareText, Search, ShieldCheck, Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { formatProductCategories } from "@/lib/productCategories";
 
-export default function StoreReviewsPage() {
+export default function AdminReviewsPage() {
   const { getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState([]);
+  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("latest");
   const [minRating, setMinRating] = useState("");
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const token = await getToken();
-        const { data } = await axios.get("/api/store/dashboard", {
+        const { data } = await axios.get("/api/admin/reviews", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setRatings(data.dashboardData.ratings || []);
+        setRatings(data.ratings || []);
       } catch (error) {
         toast.error(error?.response?.data?.error || error.message);
       } finally {
@@ -43,8 +44,9 @@ export default function StoreReviewsPage() {
       const normalizedSearch = search.toLowerCase();
       nextRatings = nextRatings.filter(
         (item) =>
-          item.product?.name?.toLowerCase().includes(normalizedSearch) ||
           item.user?.name?.toLowerCase().includes(normalizedSearch) ||
+          item.product?.name?.toLowerCase().includes(normalizedSearch) ||
+          item.product?.store?.name?.toLowerCase().includes(normalizedSearch) ||
           item.review?.toLowerCase().includes(normalizedSearch),
       );
     }
@@ -62,17 +64,17 @@ export default function StoreReviewsPage() {
     }
 
     return nextRatings;
-  }, [ratings, sort, minRating, search]);
+  }, [ratings, search, minRating, sort]);
 
   if (loading) return <Loading />;
 
   return (
     <div className="mb-28 text-slate-500">
       <h1 className="text-2xl">
-        Store <span className="font-medium text-slate-800">Reviews</span>
+        Admin <span className="font-medium text-slate-800">Reviews</span>
       </h1>
       <p className="mt-2 text-sm text-slate-500">
-        Manage product feedback, track customer sentiment, and jump to reviewed products.
+        Cross-store review visibility for quality control, sentiment tracking, and product oversight.
       </p>
 
       <div className="motion-section filter-panel mt-6 flex flex-col gap-3 rounded-[1.5rem] p-4 lg:flex-row lg:items-center lg:justify-between">
@@ -81,7 +83,7 @@ export default function StoreReviewsPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by product, buyer, or review"
+            placeholder="Search by buyer, product, store, or review"
             className="bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
           />
         </div>
@@ -115,7 +117,7 @@ export default function StoreReviewsPage() {
           <article
             key={review.id}
             className="motion-section rounded-[1.5rem] border border-slate-200/80 bg-white/80 p-5 shadow-sm"
-            style={{ animationDelay: `${90 + index * 60}ms` }}
+            style={{ animationDelay: `${90 + index * 50}ms` }}
           >
             <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
               <div className="flex items-start gap-4">
@@ -137,8 +139,13 @@ export default function StoreReviewsPage() {
                 </div>
               </div>
 
-              <div className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
-                {formatProductCategories(review.product?.category)}
+              <div className="flex flex-wrap gap-2">
+                <span className="filter-chip rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  {formatProductCategories(review.product?.category)}
+                </span>
+                <span className="filter-chip rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-violet-700">
+                  {review.product?.store?.name}
+                </span>
               </div>
             </div>
 
@@ -147,7 +154,7 @@ export default function StoreReviewsPage() {
               <span>{review.review}</span>
             </p>
 
-            <div className="mt-5 flex items-center justify-between gap-4 rounded-[1.25rem] border border-white/80 bg-slate-50/80 px-4 py-3">
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-[1.25rem] border border-white/80 bg-slate-50/80 px-4 py-3">
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
                   Product
@@ -156,12 +163,20 @@ export default function StoreReviewsPage() {
                   {review.product?.name}
                 </p>
               </div>
-              <a
-                href={`/product/${review.product?.id}`}
-                className="inline-flex items-center gap-1 text-sm font-medium text-emerald-600"
-              >
-                View product <Star size={14} />
-              </a>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/product/${review.product?.id}`}
+                  className="inline-flex items-center gap-1 text-sm font-medium text-emerald-600"
+                >
+                  View product <Star size={14} />
+                </Link>
+                <Link
+                  href={`/shop/${review.product?.store?.username}`}
+                  className="inline-flex items-center gap-1 text-sm font-medium text-violet-600"
+                >
+                  View store <ShieldCheck size={14} />
+                </Link>
+              </div>
             </div>
           </article>
         ))}

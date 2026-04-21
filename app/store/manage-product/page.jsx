@@ -5,6 +5,8 @@ import { toast } from "react-hot-toast";
 import Image from "next/image";
 import Loading from "@/components/Loading";
 import { useAuth, useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { formatProductCategories } from "@/lib/productCategories";
 
 export default function StoreManageProducts() {
   const { getToken } = useAuth();
@@ -91,7 +93,12 @@ export default function StoreManageProducts() {
                     src={product.images[0]}
                     alt=""
                   />
-                  {product.name}
+                  <div>
+                    <p>{product.name}</p>
+                    <p className="text-xs text-slate-500">
+                      {formatProductCategories(product.category)}
+                    </p>
+                  </div>
                 </div>
               </td>
               <td className="px-4 py-3 max-w-md text-slate-600 hidden md:table-cell truncate">
@@ -103,21 +110,29 @@ export default function StoreManageProducts() {
               <td className="px-4 py-3">
                 {currency} {product.price.toLocaleString()}
               </td>
-              <td className="px-4 py-3 text-center">
-                <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    onChange={() =>
-                      toast.promise(toggleStock(product.id), {
-                        loading: "Updating data...",
-                      })
-                    }
-                    checked={product.inStock}
-                  />
-                  <div className="w-9 h-5 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
-                  <span className="dot absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
-                </label>
+              <td className="px-4 py-3">
+                <div className="flex items-center justify-center gap-4">
+                  <Link
+                    href={`/store/add-product?edit=${product.id}`}
+                    className="control-button control-button--soft rounded-full px-4 py-2 text-xs font-medium"
+                  >
+                    Edit
+                  </Link>
+                  <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      onChange={() =>
+                        toast.promise(toggleStock(product.id), {
+                          loading: "Updating data...",
+                        })
+                      }
+                      checked={product.inStock}
+                    />
+                    <div className="w-9 h-5 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
+                    <span className="dot absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
+                  </label>
+                </div>
               </td>
             </tr>
           ))}

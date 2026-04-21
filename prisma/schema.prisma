@@ -136,6 +136,7 @@ model Coupon {
     forNewUser  Boolean
     forMember   Boolean  @default(false)
     isPublic    Boolean
+    startsAt    DateTime @default(now())
     expiresAt   DateTime
     createdAt   DateTime @default(now())
 }

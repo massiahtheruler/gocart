@@ -12,9 +12,26 @@ export async function POST(request) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
     const { coupon } = await request.json();
-    coupon.code = coupon.code.toUpperCase();
+    const normalizedCoupon = {
+      ...coupon,
+      code: coupon.code.toUpperCase(),
+      discount: Number(coupon.discount),
+      startsAt: new Date(coupon.startsAt || new Date()),
+      expiresAt: new Date(coupon.expiresAt),
+    };
 
-    await prisma.coupon.create({ data: coupon }).then(async (coupon) => {
+    if (Number.isNaN(normalizedCoupon.discount) || normalizedCoupon.discount <= 0) {
+      return NextResponse.json({ error: "invalid coupon discount" }, { status: 400 });
+    }
+
+    if (normalizedCoupon.startsAt >= normalizedCoupon.expiresAt) {
+      return NextResponse.json(
+        { error: "Coupon start date must be before expiry date" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.coupon.create({ data: normalizedCoupon }).then(async (coupon) => {
       await inngest.send({
         name: "app/coupon.expired",
         data: {
@@ -65,8 +82,21 @@ export async function GET() {
     if (!isAdmin) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
-    const coupons = await prisma.coupon.findMany({});
-    return NextResponse.json({ coupons });
+    const now = new Date();
+    const coupons = await prisma.coupon.findMany({
+      orderBy: [{ startsAt: "desc" }, { expiresAt: "desc" }],
+    });
+    return NextResponse.json({
+      coupons: coupons.map((coupon) => ({
+        ...coupon,
+        status:
+          coupon.startsAt > now
+            ? "upcoming"
+            : coupon.expiresAt < now
+              ? "expired"
+              : "active",
+      })),
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

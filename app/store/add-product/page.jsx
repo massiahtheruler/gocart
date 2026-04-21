@@ -2,23 +2,15 @@
 import { assets } from "@/assets/assets";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
+import { parseProductCategories } from "@/lib/productCategories";
+import { catalogCategories } from "@/lib/catalogCategories";
 
 export default function StoreAddProduct() {
-  const categories = [
-    "Electronics",
-    "Clothing",
-    "Home & Kitchen",
-    "Beauty & Health",
-    "Toys & Games",
-    "Sports & Outdoors",
-    "Books & Media",
-    "Food & Drink",
-    "Hobbies & Crafts",
-    "Others",
-  ];
+  const categories = catalogCategories;
 
   const [images, setImages] = useState({ 1: null, 2: null, 3: null, 4: null });
   const [productInfo, setProductInfo] = useState({
@@ -26,15 +18,43 @@ export default function StoreAddProduct() {
     description: "",
     mrp: 0,
     price: 0,
-    category: "",
+    categories: [],
   });
   const [loading, setLoading] = useState(false);
   const [aiUsed, setAiUsed] = useState(false);
+  const [existingImages, setExistingImages] = useState([]);
+  const [customCategory, setCustomCategory] = useState("");
 
   const { getToken } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditMode = Boolean(editId);
 
   const onChangeHandler = (e) => {
     setProductInfo({ ...productInfo, [e.target.name]: e.target.value });
+  };
+
+  const toggleCategory = (category) => {
+    setProductInfo((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(category)
+        ? prev.categories.filter((item) => item !== category)
+        : [...prev.categories, category],
+    }));
+  };
+
+  const addCustomCategory = () => {
+    const normalizedCategory = customCategory.trim();
+    if (!normalizedCategory) return;
+
+    setProductInfo((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(normalizedCategory)
+        ? prev.categories
+        : [...prev.categories, normalizedCategory],
+    }));
+    setCustomCategory("");
   };
 
   const handleImageUpload = async (key, file) => {
@@ -83,23 +103,36 @@ export default function StoreAddProduct() {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
+      if (productInfo.categories.length < 1) {
+        return toast.error("Select at least one category");
+      }
       if (!images[1] && !images[2] && !images[3] && !images[4]) {
-        return toast.error("Please upload at least one image");
+        if (!isEditMode || existingImages.length === 0) {
+          return toast.error("Please upload at least one image");
+        }
       }
       setLoading(true);
 
       const formData = new FormData();
+      if (isEditMode) {
+        formData.append("productId", editId);
+      }
       formData.append("name", productInfo.name);
       formData.append("description", productInfo.description);
       formData.append("mrp", productInfo.mrp);
       formData.append("price", productInfo.price);
-      formData.append("category", productInfo.category);
+      productInfo.categories.forEach((category) =>
+        formData.append("categories", category),
+      );
 
       Object.keys(images).forEach((key) => {
         images[key] && formData.append("images", images[key]);
       });
       const token = await getToken();
-      const { data } = await axios.post("/api/store/product", formData, {
+      const { data } = await axios({
+        url: "/api/store/product",
+        method: isEditMode ? "put" : "post",
+        data: formData,
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success(data.message);
@@ -109,9 +142,12 @@ export default function StoreAddProduct() {
         description: "",
         mrp: 0,
         price: 0,
-        category: "",
+        categories: [],
       });
       setImages({ 1: null, 2: null, 3: null, 4: null });
+      setExistingImages([]);
+      setAiUsed(false);
+      router.push("/store/manage-product");
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
       // Logic to add a product
@@ -119,6 +155,33 @@ export default function StoreAddProduct() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!editId) return;
+
+      try {
+        const token = await getToken();
+        const { data } = await axios.get(`/api/store/product?id=${editId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setProductInfo({
+          name: data.product.name,
+          description: data.product.description,
+          mrp: data.product.mrp,
+          price: data.product.price,
+          categories: parseProductCategories(data.product.category),
+        });
+        setExistingImages(data.product.images || []);
+        setAiUsed(true);
+      } catch (error) {
+        toast.error(error?.response?.data?.error || error.message);
+      }
+    };
+
+    fetchProduct();
+  }, [editId, getToken]);
 
   return (
     <form
@@ -128,9 +191,17 @@ export default function StoreAddProduct() {
       className="text-slate-500 mb-28"
     >
       <h1 className="text-2xl">
-        Add New <span className="text-slate-800 font-medium">Products</span>
+        {isEditMode ? "Edit" : "Add New"}{" "}
+        <span className="text-slate-800 font-medium">Products</span>
       </h1>
-      <p className="mt-7">Product Images</p>
+      <p className="mt-7">
+        Product Images
+        {isEditMode && (
+          <span className="ml-2 text-xs text-slate-400">
+            Leave empty to keep the current images
+          </span>
+        )}
+      </p>
 
       <div htmlFor="" className="flex gap-3 mt-4">
         {Object.keys(images).map((key) => (
@@ -142,7 +213,7 @@ export default function StoreAddProduct() {
               src={
                 images[key]
                   ? URL.createObjectURL(images[key])
-                  : assets.upload_area
+                  : existingImages[key - 1] || assets.upload_area
               }
               alt=""
             />
@@ -212,29 +283,76 @@ export default function StoreAddProduct() {
         </label>
       </div>
 
-      <select
-        onChange={(e) =>
-          setProductInfo({ ...productInfo, category: e.target.value })
-        }
-        value={productInfo.category}
-        className="w-full max-w-sm p-2 px-4 my-6 outline-none border border-slate-200 rounded"
-        required
-      >
-        <option value="">Select a category</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+      <div className="my-6 max-w-2xl">
+        <p className="mb-3 text-sm font-medium">
+          Categories
+          <span className="ml-2 text-xs text-slate-400">
+            Select one or more
+          </span>
+        </p>
+        <div className="flex flex-wrap gap-3">
+          {categories.map((category) => {
+            const isSelected = productInfo.categories.includes(category);
+
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => toggleCategory(category)}
+                className={`filter-toggle-control rounded-full border px-4 py-2 text-sm font-medium ${
+                  isSelected
+                    ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                    : "border-slate-200 bg-white text-slate-700"
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-4 flex max-w-lg gap-3">
+          <input
+            type="text"
+            value={customCategory}
+            onChange={(e) => setCustomCategory(e.target.value)}
+            placeholder="Add a custom category like Smart Home"
+            className="filter-control w-full rounded-2xl px-4 py-3 text-slate-700 outline-none"
+          />
+          <button
+            type="button"
+            onClick={addCustomCategory}
+            className="control-button control-button--soft rounded-2xl px-4 py-3 text-sm font-medium"
+          >
+            Add
+          </button>
+        </div>
+        {productInfo.categories.some(
+          (category) => !categories.includes(category),
+        ) && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {productInfo.categories
+              .filter((category) => !categories.includes(category))
+              .map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => toggleCategory(category)}
+                  className="filter-chip inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700"
+                >
+                  {category} ×
+                </button>
+              ))}
+          </div>
+        )}
+      </div>
 
       <br />
 
       <button
         disabled={loading}
-        className="bg-slate-800 text-white px-6 mt-7 py-2 hover:bg-slate-900 rounded transition"
+        className="control-button control-button--primary mt-7 rounded-2xl px-6 py-3 text-white"
       >
-        Add Product
+        {isEditMode ? "Update Product" : "Add Product"}
       </button>
     </form>
   );

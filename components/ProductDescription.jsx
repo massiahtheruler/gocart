@@ -12,9 +12,14 @@ const ProductDescription = ({ product }) => {
         <div className="my-18 text-sm text-slate-600">
 
             {/* Tabs */}
-            <div className="flex border-b border-slate-200 mb-6 max-w-2xl">
+            <div className="segmented-tabs mb-6 max-w-2xl">
                 {['Description', 'Reviews'].map((tab, index) => (
-                    <button className={`${tab === selectedTab ? 'border-b-[1.5px] font-semibold' : 'text-slate-400'} px-3 py-2 font-medium`} key={index} onClick={() => setSelectedTab(tab)}>
+                    <button
+                        className="segmented-tab"
+                        data-active={tab === selectedTab}
+                        key={index}
+                        onClick={() => setSelectedTab(tab)}
+                    >
                         {tab}
                     </button>
                 ))}
@@ -28,15 +33,20 @@ const ProductDescription = ({ product }) => {
             {/* Reviews */}
             {selectedTab === "Reviews" && (
                 <div className="flex flex-col gap-3 mt-14">
-                    <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/70 p-5 shadow-sm">
+                    <div className="filter-panel rounded-[1.5rem] p-5 shadow-sm">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                                 <h3 className="text-base font-semibold text-slate-800">
                                     Customer reviews
                                 </h3>
-                                <p className="text-sm text-slate-500">
-                                    {product.rating.length} review{product.rating.length === 1 ? "" : "s"} for this product
-                                </p>
+                                <div className="mt-2 flex items-center gap-2">
+                                    <span className="rating-count-pill">
+                                        {product.rating.length} review{product.rating.length === 1 ? "" : "s"}
+                                    </span>
+                                    <span className="text-sm text-slate-500">
+                                        Rated by verified buyers
+                                    </span>
+                                </div>
                             </div>
                             <Link href="/reviews" className="section-link inline-flex items-center gap-1 text-sm font-medium text-emerald-600">
                                 View all reviews <ArrowRight size={14} className="showroom-arrow text-emerald-600" />

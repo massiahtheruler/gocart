@@ -2,11 +2,12 @@
 import ProductCard from "@/components/ProductCard"
 import { useParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
-import { MailIcon, MapPinIcon, SlidersHorizontal, Tag } from "lucide-react"
+import { ArrowRight, MailIcon, MapPinIcon, SlidersHorizontal, Tag, TicketPercent } from "lucide-react"
 import Loading from "@/components/Loading"
 import Image from "next/image"
 import axios from "axios"
 import toast from "react-hot-toast"
+import Link from "next/link"
 
 export default function StoreShop() {
 
@@ -99,8 +100,20 @@ export default function StoreShop() {
                         height={200}
                     />
                     <div className="text-center md:text-left">
-                        <h1 className="text-3xl font-semibold text-slate-800">{storeInfo.name}</h1>
-                        <p className="text-sm text-slate-600 mt-2 max-w-lg">{storeInfo.description}</p>
+                        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                            <div>
+                                <h1 className="text-3xl font-semibold text-slate-800">{storeInfo.name}</h1>
+                                <p className="text-sm text-slate-600 mt-2 max-w-lg">{storeInfo.description}</p>
+                            </div>
+                            <Link
+                                href="/deals"
+                                className="control-button control-button--soft glass-sheen inline-flex items-center gap-2 self-center rounded-full px-5 py-3 text-sm font-medium md:self-start"
+                            >
+                                <TicketPercent size={16} />
+                                Available Deals
+                                <ArrowRight size={14} />
+                            </Link>
+                        </div>
                         <div className="text-xs text-slate-500 mt-4 space-y-1"></div>
                         <div className="space-y-2 text-sm text-slate-500">
                             <div className="flex items-center">
@@ -120,13 +133,13 @@ export default function StoreShop() {
             {/* Products */}
             <div className=" max-w-7xl mx-auto mb-40">
                 <h1 className="text-2xl mt-12">Shop <span className="text-slate-800 font-medium">Products</span></h1>
-                <div className="mt-5 flex flex-col gap-3 rounded-[1.5rem] border border-slate-200/80 bg-white/80 p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+                <div className="filter-panel mt-5 flex flex-col gap-3 rounded-[1.5rem] p-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex flex-wrap items-center gap-3">
                         <label className="text-sm font-medium text-slate-600">Sort</label>
                         <select
                             value={sort}
                             onChange={(e) => setSort(e.target.value)}
-                            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 outline-none"
+                            className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
                         >
                             <option value="">Recommended</option>
                             <option value="rating-desc">Rating: high to low</option>
@@ -142,7 +155,7 @@ export default function StoreShop() {
                         <select
                             value={minRating}
                             onChange={(e) => setMinRating(e.target.value)}
-                            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 outline-none"
+                            className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
                         >
                             <option value="">Any rating</option>
                             <option value="4">4 stars & up</option>
@@ -152,7 +165,7 @@ export default function StoreShop() {
                         <button
                             type="button"
                             onClick={() => setSaleOnly((prev) => !prev)}
-                            className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                            className={`filter-toggle-control rounded-full border px-4 py-2 text-sm font-medium ${
                                 saleOnly
                                     ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
                                     : 'border-slate-200 bg-white text-slate-700'
@@ -180,19 +193,19 @@ export default function StoreShop() {
 
                 <div className="mt-4 flex flex-wrap gap-2">
                     {saleOnly && (
-                        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                        <span className="filter-chip inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
                             <Tag size={12} />
                             On sale
                         </span>
                     )}
                     {minRating && (
-                        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                        <span className="filter-chip inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
                             <Tag size={12} />
                             {minRating}+ stars
                         </span>
                     )}
                     {sort && (
-                        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                        <span className="filter-chip inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
                             <Tag size={12} />
                             {sort === 'rating-desc' && 'Highest rated'}
                             {sort === 'rating-asc' && 'Lowest rated'}
@@ -204,7 +217,7 @@ export default function StoreShop() {
                 </div>
 
                 {filteredProducts.length > 0 ? (
-                    <div className="mt-5 grid grid-cols-2 sm:flex flex-wrap gap-6 xl:gap-12 mx-auto">
+                    <div className="mx-auto mt-5 grid grid-cols-1 gap-6 min-[500px]:grid-cols-2 xl:grid-cols-4 xl:gap-12">
                         {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
                     </div>
                 ) : (

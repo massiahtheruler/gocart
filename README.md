@@ -59,6 +59,17 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Prisma schema sync
+
+If you pull schema changes, especially around coupons or other database-backed features, sync Prisma before testing or deploying:
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+This repo also relies on Prisma Client generation during install for deployment, so keep the `postinstall` script intact when changing package scripts.
+
 You can start editing the page by modifying `app/(public)/page.js`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Outfit](https://vercel.com/font), a new font family for Vercel.

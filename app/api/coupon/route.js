@@ -4,15 +4,25 @@ import { getAuth } from "@clerk/nextjs/server";
 
 export async function GET() {
   try {
+    const now = new Date();
     const coupons = await prisma.coupon.findMany({
       where: {
         isPublic: true,
-        expiresAt: { gt: new Date() },
       },
-      orderBy: [{ discount: "desc" }, { expiresAt: "asc" }],
+      orderBy: [{ startsAt: "desc" }, { expiresAt: "desc" }],
     });
 
-    return NextResponse.json({ coupons });
+    const couponsWithStatus = coupons.map((coupon) => ({
+      ...coupon,
+      status:
+        coupon.startsAt > now
+          ? "upcoming"
+          : coupon.expiresAt < now
+            ? "expired"
+            : "active",
+    }));
+
+    return NextResponse.json({ coupons: couponsWithStatus });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -32,6 +42,7 @@ export async function POST(request) {
 
     const { code } = await request.json();
     const normalizedCode = code?.trim().toUpperCase();
+    const now = new Date();
 
     if (!normalizedCode) {
       return NextResponse.json(
@@ -43,13 +54,14 @@ export async function POST(request) {
     const coupon = await prisma.coupon.findFirst({
       where: {
         code: normalizedCode,
-        expiresAt: { gt: new Date() },
+        startsAt: { lte: now },
+        expiresAt: { gt: now },
       },
     });
 
     if (!coupon) {
       return NextResponse.json(
-        { error: "Coupon not found or expired." },
+        { error: "Coupon not found, not active yet, or expired." },
         { status: 404 },
       );
     }

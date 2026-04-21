@@ -10,9 +10,23 @@ export async function POST(request) {
     if (!storeId) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
-    const { orderId, status } = await request.json();
-    await prisma.order.update({
-      where: { id: orderId, storeId },
+    const { orderId, orderIds, status } = await request.json();
+
+    const ids = Array.isArray(orderIds)
+      ? orderIds.filter(Boolean)
+      : orderId
+        ? [orderId]
+        : [];
+
+    if (!status || ids.length === 0) {
+      return NextResponse.json(
+        { error: "order ids and status are required" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.order.updateMany({
+      where: { id: { in: ids }, storeId },
       data: { status },
     });
 

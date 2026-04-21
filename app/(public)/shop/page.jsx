@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard"
 import { MoveLeftIcon, SlidersHorizontal, Tag } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useSelector } from "react-redux"
+import { productHasCategory } from "@/lib/productCategories"
 
  function ShopContent() {
 
@@ -26,7 +27,7 @@ import { useSelector } from "react-redux"
     }
 
     if (category) {
-        filteredProducts = filteredProducts.filter(product => product.category === category);
+        filteredProducts = filteredProducts.filter(product => productHasCategory(product.category, category));
     }
 
     if (minRating) {
@@ -115,8 +116,8 @@ import { useSelector } from "react-redux"
                 <div className="my-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <h1 onClick={() => router.push('/shop')} className="text-2xl text-slate-500 flex items-center gap-2 cursor-pointer"> {(search || category || sale === '1' || sort) && <MoveLeftIcon size={20} />}  {headingLabel} <span className="text-slate-700 font-medium">Products</span></h1>
-                            <p className="mt-2 text-sm text-slate-500">
+                            <h1 onClick={() => router.push('/shop')} className="flex cursor-pointer items-center gap-2 text-2xl font-medium text-slate-700"> {(search || category || sale === '1' || sort) && <MoveLeftIcon size={20} className="text-slate-500" />}  {headingLabel} <span className="text-slate-900 font-semibold">Products</span></h1>
+                            <p className="mt-2 text-sm text-slate-600">
                                 Showing {filteredProducts.length} product{filteredProducts.length === 1 ? "" : "s"} from the current filter set.
                             </p>
                         </div>
@@ -132,7 +133,7 @@ import { useSelector } from "react-redux"
                         )}
                     </div>
 
-                    <div className="flex flex-col gap-3 rounded-[1.4rem] border border-slate-200/80 bg-slate-50/80 p-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="filter-panel flex flex-col gap-3 rounded-[1.4rem] p-4 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-3">
                             <label className="text-sm font-medium text-slate-600">
                                 Sort
@@ -140,7 +141,7 @@ import { useSelector } from "react-redux"
                             <select
                                 value={sort || ""}
                                 onChange={(e) => updateQuery({ sort: e.target.value || null })}
-                                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 outline-none"
+                                className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
                             >
                                 <option value="">Recommended</option>
                                 <option value="rating-desc">Rating: high to low</option>
@@ -158,7 +159,7 @@ import { useSelector } from "react-redux"
                             <select
                                 value={minRating || ""}
                                 onChange={(e) => updateQuery({ minRating: e.target.value || null })}
-                                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 outline-none"
+                                className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
                             >
                                 <option value="">Any rating</option>
                                 <option value="4">4 stars & up</option>
@@ -168,7 +169,7 @@ import { useSelector } from "react-redux"
                             <button
                                 type="button"
                                 onClick={() => updateQuery({ sale: sale === '1' ? null : '1' })}
-                                className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                                className={`filter-toggle-control rounded-full border px-4 py-2 text-sm font-medium ${
                                     sale === '1'
                                         ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
                                         : 'border-slate-200 bg-white text-slate-700'
@@ -182,7 +183,7 @@ import { useSelector } from "react-redux"
                     {appliedFilters.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                             {appliedFilters.map((filter) => (
-                                <span key={filter.label} className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                                <span key={filter.label} className="filter-chip inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
                                     <Tag size={12} />
                                     {filter.label}
                                 </span>
@@ -192,7 +193,7 @@ import { useSelector } from "react-redux"
                 </div>
 
                 {filteredProducts.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:flex flex-wrap gap-6 xl:gap-12 mx-auto mb-32">
+                    <div className="mx-auto mb-32 grid grid-cols-1 gap-6 min-[500px]:grid-cols-2 xl:grid-cols-4 xl:gap-12">
                         {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
                     </div>
                 ) : (

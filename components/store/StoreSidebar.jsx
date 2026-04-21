@@ -27,7 +27,7 @@ const StoreSidebar = ({ storeInfo }) => {
     },
     { name: "Orders", href: "/store/orders", icon: LayoutListIcon },
     { name: "Reviews", href: "/store/reviews", icon: MessageSquareText },
-    { name: "Deals", href: "/deals", icon: Tags },
+    { name: "Deals", href: "/store/deals", icon: Tags },
   ];
 
   return (

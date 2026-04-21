@@ -3,10 +3,13 @@ import Counter from "@/components/Counter";
 import OrderSummary from "@/components/OrderSummary";
 import PageTitle from "@/components/PageTitle";
 import { deleteItemFromCart } from "@/lib/features/cart/cartSlice";
-import { Trash2Icon } from "lucide-react";
+import { CheckCircle2, TicketPercent, Trash2Icon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { formatProductCategories } from "@/lib/productCategories";
+import Link from "next/link";
+import { clearSelectedDealCode, getSelectedDealCode } from "@/lib/selectedDeal";
 
 export default function Cart() {
 
@@ -19,6 +22,7 @@ export default function Cart() {
 
     const [cartArray, setCartArray] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [selectedDealCode, setSelectedDealCode] = useState("");
 
     const createCartArray = () => {
         setTotalPrice(0);
@@ -46,12 +50,63 @@ export default function Cart() {
         }
     }, [cartItems, products]);
 
+    useEffect(() => {
+        const syncSelectedDeal = () => {
+            setSelectedDealCode(getSelectedDealCode());
+        };
+
+        syncSelectedDeal();
+        window.addEventListener("gocart:selected-deal", syncSelectedDeal);
+
+        return () => {
+            window.removeEventListener("gocart:selected-deal", syncSelectedDeal);
+        };
+    }, []);
+
     return cartArray.length > 0 ? (
         <div className="min-h-screen mx-6 text-slate-800">
 
             <div className="max-w-7xl mx-auto ">
                 {/* Title */}
                 <PageTitle heading="My Cart" text="items in your cart" linkText="Add more" />
+
+                {selectedDealCode && (
+                    <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-[28px] border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-emerald-100/80 px-5 py-4 shadow-[0_20px_40px_rgba(16,185,129,0.12)]">
+                        <div className="flex items-start gap-3">
+                            <div className="mt-0.5 inline-flex size-10 items-center justify-center rounded-2xl bg-emerald-500/12 text-emerald-700">
+                                <TicketPercent size={18} />
+                            </div>
+                            <div>
+                                <p className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                                    <CheckCircle2 size={16} className="text-emerald-600" />
+                                    Selected deal saved
+                                </p>
+                                <p className="mt-1 text-sm text-slate-600">
+                                    <span className="font-semibold text-emerald-700">{selectedDealCode}</span> is queued for checkout and will be validated automatically.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href="/deals"
+                                className="control-button control-button--soft rounded-full px-4 py-2 text-sm font-medium"
+                            >
+                                View deals
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    clearSelectedDealCode();
+                                    setSelectedDealCode("");
+                                }}
+                                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-red-200 hover:text-red-600"
+                            >
+                                <XIcon size={14} />
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex items-start justify-between gap-5 max-lg:flex-col">
 
@@ -74,7 +129,7 @@ export default function Cart() {
                                             </div>
                                             <div>
                                                 <p className="max-sm:text-sm">{item.name}</p>
-                                                <p className="text-xs text-slate-500">{item.category}</p>
+                                                <p className="text-xs text-slate-500">{formatProductCategories(item.category)}</p>
                                                 <p>{currency}{item.price}</p>
                                             </div>
                                         </td>

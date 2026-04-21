@@ -1,25 +1,43 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
-import { DeleteIcon } from "lucide-react";
+import { CalendarClock, DeleteIcon, Sparkles, TicketPercent } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 
+const statusClasses = {
+  active: "bg-emerald-100 text-emerald-700",
+  upcoming: "bg-sky-100 text-sky-700",
+  expired: "bg-slate-200 text-slate-600",
+};
+
 export default function AdminCoupons() {
   const { getToken } = useAuth();
-
   const [coupons, setCoupons] = useState([]);
-
   const [newCoupon, setNewCoupon] = useState({
     code: "",
     description: "",
     discount: "",
     forNewUser: false,
     forMember: false,
-    isPublic: false,
-    expiresAt: new Date(),
+    isPublic: true,
+    startsAt: format(new Date(), "yyyy-MM-dd"),
+    expiresAt: format(
+      new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+      "yyyy-MM-dd",
+    ),
   });
+
+  const couponSummary = useMemo(
+    () => ({
+      active: coupons.filter((coupon) => coupon.status === "active").length,
+      upcoming: coupons.filter((coupon) => coupon.status === "upcoming").length,
+      expired: coupons.filter((coupon) => coupon.status === "expired").length,
+    }),
+    [coupons],
+  );
 
   const fetchCoupons = async () => {
     try {
@@ -39,13 +57,14 @@ export default function AdminCoupons() {
     e.preventDefault();
     try {
       const token = await getToken();
-
-      newCoupon.discount = Number(newCoupon.discount);
-      newCoupon.expiresAt = new Date(newCoupon.expiresAt);
+      const payload = {
+        ...newCoupon,
+        discount: Number(newCoupon.discount),
+      };
 
       const { data } = await axios.post(
         "/api/admin/coupon",
-        { coupon: newCoupon },
+        { coupon: payload },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -53,11 +72,23 @@ export default function AdminCoupons() {
         },
       );
       toast.success(data.message);
+      setNewCoupon({
+        code: "",
+        description: "",
+        discount: "",
+        forNewUser: false,
+        forMember: false,
+        isPublic: true,
+        startsAt: format(new Date(), "yyyy-MM-dd"),
+        expiresAt: format(
+          new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+          "yyyy-MM-dd",
+        ),
+      });
       await fetchCoupons();
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
     }
-    // Logic to add a coupon
   };
 
   const handleChange = (e) => {
@@ -81,7 +112,6 @@ export default function AdminCoupons() {
     } catch (error) {
       toast.error(error?.response?.data?.error || error.message);
     }
-    // Logic to delete a coupon
   };
 
   useEffect(() => {
@@ -89,168 +119,288 @@ export default function AdminCoupons() {
   }, [getToken]);
 
   return (
-    <div className="text-slate-500 mb-40">
-      {/* Add Coupon */}
-      <form
-        onSubmit={(e) =>
-          toast.promise(handleAddCoupon(e), { loading: "Adding coupon..." })
-        }
-        className="max-w-sm text-sm"
-      >
-        <h2 className="text-2xl">
-          Add <span className="text-slate-800 font-medium">Coupons</span>
-        </h2>
-        <div className="flex gap-2 max-sm:flex-col mt-2">
-          <input
-            type="text"
-            placeholder="Coupon Code"
-            className="w-full mt-2 p-2 border border-slate-200 outline-slate-400 rounded-md"
-            name="code"
-            value={newCoupon.code}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Coupon Discount (%)"
-            min={1}
-            max={100}
-            className="w-full mt-2 p-2 border border-slate-200 outline-slate-400 rounded-md"
-            name="discount"
-            value={newCoupon.discount}
-            onChange={handleChange}
-            required
-          />
+    <div className="mb-28 space-y-8 text-slate-500">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold text-slate-700">
+            Coupon <span className="text-slate-900">Control Center</span>
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-500">
+            Create site-wide promotions, schedule future drops, and keep visible
+            deal inventory alive even after a campaign expires.
+          </p>
         </div>
-        <input
-          type="text"
-          placeholder="Coupon Description"
-          className="w-full mt-2 p-2 border border-slate-200 outline-slate-400 rounded-md"
-          name="description"
-          value={newCoupon.description}
-          onChange={handleChange}
-          required
-        />
+        <div className="inline-flex items-center gap-2 rounded-full border border-violet-100 bg-violet-50 px-4 py-2 text-sm font-medium text-violet-700">
+          <Sparkles size={16} />
+          Scheduled promotions enabled
+        </div>
+      </div>
 
-        <label>
-          <p className="mt-3">Coupon Expiry Date</p>
-          <input
-            type="date"
-            placeholder="Coupon Expires At"
-            className="w-full mt-1 p-2 border border-slate-200 outline-slate-400 rounded-md"
-            name="expiresAt"
-            value={format(newCoupon.expiresAt, "yyyy-MM-dd")}
-            onChange={handleChange}
-          />
-        </label>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+            Active
+          </p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900">
+            {couponSummary.active}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/90 p-5 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+            Upcoming
+          </p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900">
+            {couponSummary.upcoming}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-slate-100/90 p-5 shadow-sm">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+            Expired archive
+          </p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900">
+            {couponSummary.expired}
+          </p>
+        </div>
+      </div>
 
-        <div className="mt-5">
-          <div className="flex gap-2 mt-3">
-            <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                name="forNewUser"
-                checked={newCoupon.forNewUser}
-                onChange={(e) =>
-                  setNewCoupon({ ...newCoupon, forNewUser: e.target.checked })
-                }
-              />
-              <div className="w-11 h-6 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
-              <span className="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
-            </label>
-            <p>For New User</p>
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
+        <form
+          onSubmit={(e) =>
+            toast.promise(handleAddCoupon(e), { loading: "Saving coupon..." })
+          }
+          className="rounded-3xl border border-slate-200 bg-white/85 p-6 shadow-sm"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold text-slate-800">
+                Create Coupon
+              </h2>
+              <p className="mt-2 text-sm text-slate-500">
+                Set a start date and expiry so deals can be teased before they
+                become redeemable.
+              </p>
+            </div>
+            <span className="rounded-2xl bg-slate-50 p-3 text-violet-600">
+              <TicketPercent size={18} />
+            </span>
           </div>
-          <div className="flex gap-2 mt-3">
-            <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                name="forMember"
-                checked={newCoupon.forMember}
-                onChange={(e) =>
-                  setNewCoupon({ ...newCoupon, forMember: e.target.checked })
-                }
-              />
-              <div className="w-11 h-6 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
-              <span className="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
-            </label>
-            <p>For Member</p>
-          </div>
-        </div>
-        <button className="mt-4 p-2 px-10 rounded bg-slate-700 text-white active:scale-95 transition">
-          Add Coupon
-        </button>
-      </form>
 
-      {/* List Coupons */}
-      <div className="mt-14">
-        <h2 className="text-2xl">
-          List <span className="text-slate-800 font-medium">Coupons</span>
-        </h2>
-        <div className="overflow-x-auto mt-4 rounded-lg border border-slate-200 max-w-4xl">
-          <table className="min-w-full bg-white text-sm">
-            <thead className="bg-slate-50">
-              <tr>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  Code
-                </th>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  Description
-                </th>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  Discount
-                </th>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  Expires At
-                </th>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  New User
-                </th>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  For Member
-                </th>
-                <th className="py-3 px-4 text-left font-semibold text-slate-600">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {coupons.map((coupon) => (
-                <tr key={coupon.code} className="hover:bg-slate-50">
-                  <td className="py-3 px-4 font-medium text-slate-800">
-                    {coupon.code}
-                  </td>
-                  <td className="py-3 px-4 text-slate-800">
-                    {coupon.description}
-                  </td>
-                  <td className="py-3 px-4 text-slate-800">
-                    {coupon.discount}%
-                  </td>
-                  <td className="py-3 px-4 text-slate-800">
-                    {format(coupon.expiresAt, "yyyy-MM-dd")}
-                  </td>
-                  <td className="py-3 px-4 text-slate-800">
-                    {coupon.forNewUser ? "Yes" : "No"}
-                  </td>
-                  <td className="py-3 px-4 text-slate-800">
-                    {coupon.forMember ? "Yes" : "No"}
-                  </td>
-                  <td className="py-3 px-4 text-slate-800">
-                    <DeleteIcon
-                      onClick={() =>
-                        toast.promise(deleteCoupon(coupon.code), {
-                          loading: "Deleting coupon...",
-                        })
-                      }
-                      className="w-5 h-5 text-red-500 hover:text-red-800 cursor-pointer"
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          <div className="mt-6 space-y-4 text-sm">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <input
+                type="text"
+                placeholder="Coupon code"
+                className="filter-control w-full rounded-2xl px-4 py-3 text-slate-700 outline-none"
+                name="code"
+                value={newCoupon.code}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="number"
+                placeholder="Discount (%)"
+                min={1}
+                max={100}
+                className="filter-control w-full rounded-2xl px-4 py-3 text-slate-700 outline-none"
+                name="discount"
+                value={newCoupon.discount}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <textarea
+              placeholder="Coupon description"
+              className="filter-control min-h-28 w-full rounded-2xl px-4 py-3 text-slate-700 outline-none"
+              name="description"
+              value={newCoupon.description}
+              onChange={handleChange}
+              required
+            />
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2">
+                <span className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                  <CalendarClock size={16} />
+                  Starts at
+                </span>
+                <input
+                  type="date"
+                  className="filter-control w-full rounded-2xl px-4 py-3 text-slate-700 outline-none"
+                  name="startsAt"
+                  value={newCoupon.startsAt}
+                  onChange={handleChange}
+                />
+              </label>
+              <label className="space-y-2">
+                <span className="text-sm font-medium text-slate-600">
+                  Expires at
+                </span>
+                <input
+                  type="date"
+                  className="filter-control w-full rounded-2xl px-4 py-3 text-slate-700 outline-none"
+                  name="expiresAt"
+                  value={newCoupon.expiresAt}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              <label className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-medium text-slate-700">
+                    New users
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-emerald-600"
+                    checked={newCoupon.forNewUser}
+                    onChange={(e) =>
+                      setNewCoupon({
+                        ...newCoupon,
+                        forNewUser: e.target.checked,
+                      })
+                    }
+                  />
+                </div>
+              </label>
+
+              <label className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-medium text-slate-700">
+                    Plus members
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-emerald-600"
+                    checked={newCoupon.forMember}
+                    onChange={(e) =>
+                      setNewCoupon({
+                        ...newCoupon,
+                        forMember: e.target.checked,
+                      })
+                    }
+                  />
+                </div>
+              </label>
+
+              <label className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-medium text-slate-700">
+                    Show publicly
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-emerald-600"
+                    checked={newCoupon.isPublic}
+                    onChange={(e) =>
+                      setNewCoupon({
+                        ...newCoupon,
+                        isPublic: e.target.checked,
+                      })
+                    }
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <button className="control-button control-button--primary mt-6 inline-flex rounded-full px-6 py-3 text-sm font-medium text-white">
+            Save coupon
+          </button>
+        </form>
+
+        <section className="rounded-3xl border border-slate-200 bg-white/85 p-6 shadow-sm">
+          <div className="mb-5">
+            <h2 className="text-2xl font-semibold text-slate-800">
+              Coupon Timeline
+            </h2>
+            <p className="mt-2 text-sm text-slate-500">
+              Active, scheduled, and archived coupons stay visible here for
+              campaign planning and content depth.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {coupons.map((coupon) => (
+              <article
+                key={coupon.code}
+                className="rounded-2xl border border-slate-200 bg-slate-50/75 p-4"
+              >
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        {coupon.code}
+                      </h3>
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${statusClasses[coupon.status]}`}
+                      >
+                        {coupon.status}
+                      </span>
+                      {coupon.isPublic && (
+                        <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-700">
+                          Public
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm text-slate-600">
+                      {coupon.description}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      toast.promise(deleteCoupon(coupon.code), {
+                        loading: "Deleting coupon...",
+                      })
+                    }
+                    className="inline-flex items-center justify-center rounded-full border border-red-100 bg-white p-3 text-red-500 transition hover:border-red-200 hover:text-red-700"
+                  >
+                    <DeleteIcon className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                  <span className="rounded-full bg-slate-200 px-3 py-1 font-medium text-slate-700">
+                    {coupon.discount}% off
+                  </span>
+                  {coupon.forNewUser && (
+                    <span className="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-700">
+                      New users
+                    </span>
+                  )}
+                  {coupon.forMember && (
+                    <span className="rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-700">
+                      Plus members
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-4 grid gap-3 text-sm text-slate-500 md:grid-cols-2">
+                  <div className="rounded-2xl bg-white px-4 py-3">
+                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
+                      Starts
+                    </p>
+                    <p className="mt-2 text-slate-700">
+                      {format(new Date(coupon.startsAt), "yyyy-MM-dd")}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl bg-white px-4 py-3">
+                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
+                      Expires
+                    </p>
+                    <p className="mt-2 text-slate-700">
+                      {format(new Date(coupon.expiresAt), "yyyy-MM-dd")}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

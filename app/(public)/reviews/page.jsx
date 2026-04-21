@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { formatProductCategories } from "@/lib/productCategories";
 
 export default function ReviewsPage() {
   const products = useSelector((state) => state.product.list);
@@ -55,13 +56,13 @@ export default function ReviewsPage() {
           href="/shop?sort=rating"
         />
 
-        <div className="mt-8 flex flex-col gap-3 rounded-[1.5rem] border border-slate-200/80 bg-white/75 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="filter-panel mt-8 flex flex-col gap-3 rounded-[1.5rem] p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-3">
             <label className="text-sm font-medium text-slate-600">Sort</label>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 outline-none"
+              className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
             >
               <option value="latest">Latest</option>
               <option value="highest">Highest rated</option>
@@ -74,7 +75,7 @@ export default function ReviewsPage() {
             <select
               value={minRating}
               onChange={(e) => setMinRating(e.target.value)}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 outline-none"
+              className="filter-control rounded-full px-4 py-2 text-sm text-slate-700 outline-none"
             >
               <option value="">Any rating</option>
               <option value="4">4 stars & up</option>
@@ -135,7 +136,7 @@ export default function ReviewsPage() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
-                      {review.product.category}
+                      {formatProductCategories(review.product.category)}
                     </p>
                     <p className="mt-1 truncate font-medium text-slate-800">
                       {review.product.name}

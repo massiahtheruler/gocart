@@ -3,6 +3,10 @@ import authSeller from "@/middlewares/authSeller";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
+import {
+  parseProductCategories,
+  serializeProductCategories,
+} from "@/lib/productCategories";
 
 export async function POST(request) {
   try {
@@ -18,7 +22,7 @@ export async function POST(request) {
     const description = formData.get("description");
     const mrp = Number(formData.get("mrp"));
     const price = Number(formData.get("price"));
-    const category = formData.get("category");
+    const categories = parseProductCategories(formData.getAll("categories"));
     const images = formData.getAll("images");
 
     if (
@@ -26,7 +30,7 @@ export async function POST(request) {
       !description ||
       !mrp ||
       !price ||
-      !category ||
+      categories.length < 1 ||
       images.length < 1
     ) {
       return NextResponse.json(
@@ -56,7 +60,7 @@ export async function POST(request) {
         description,
         mrp,
         price,
-        category,
+        category: serializeProductCategories(categories),
         images: imagesUrl,
         storeId,
       },
@@ -79,8 +83,109 @@ export async function GET(request) {
     if (!storeId) {
       return NextResponse.json({ error: "not authorized" }, { status: 401 });
     }
+    const productId = request.nextUrl.searchParams.get("id");
+
+    if (productId) {
+      const product = await prisma.product.findFirst({
+        where: { id: productId, storeId },
+      });
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "product not found" },
+          { status: 404 },
+        );
+      }
+
+      return NextResponse.json({ product });
+    }
+
     const products = await prisma.product.findMany({ where: { storeId } });
     return NextResponse.json({ products });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: error.code || error.message },
+      { status: 400 },
+    );
+  }
+}
+
+export async function PUT(request) {
+  try {
+    const { userId } = getAuth(request);
+    const storeId = await authSeller(userId);
+
+    if (!storeId) {
+      return NextResponse.json({ error: "not authorized" }, { status: 401 });
+    }
+
+    const formData = await request.formData();
+    const productId = formData.get("productId");
+    const name = formData.get("name");
+    const description = formData.get("description");
+    const mrp = Number(formData.get("mrp"));
+    const price = Number(formData.get("price"));
+    const categories = parseProductCategories(formData.getAll("categories"));
+    const images = formData.getAll("images").filter(Boolean);
+
+    if (
+      !productId ||
+      !name ||
+      !description ||
+      !mrp ||
+      !price ||
+      categories.length < 1
+    ) {
+      return NextResponse.json(
+        { error: "missing product details" },
+        { status: 400 },
+      );
+    }
+
+    const existingProduct = await prisma.product.findFirst({
+      where: { id: productId, storeId },
+    });
+
+    if (!existingProduct) {
+      return NextResponse.json(
+        { error: "product not found" },
+        { status: 404 },
+      );
+    }
+
+    let imagesUrl = existingProduct.images;
+
+    if (images.length > 0) {
+      imagesUrl = await Promise.all(
+        images.map(async (image) => {
+          const response = await imagekit.files.upload({
+            file: image,
+            fileName: image.name || `${name}-image`,
+            folder: "/gocart/products",
+          });
+          return buildImageKitUrl(response.filePath, [
+            { quality: "auto" },
+            { format: "webp" },
+            { width: "1024" },
+          ]);
+        }),
+      );
+    }
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        name,
+        description,
+        mrp,
+        price,
+        category: serializeProductCategories(categories),
+        images: imagesUrl,
+      },
+    });
+
+    return NextResponse.json({ message: "Product updated successfully" });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

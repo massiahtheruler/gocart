@@ -100,11 +100,16 @@ const ProductDetails = ({ product }) => {
             </div>
             <div className="flex-1">
                 <h1 className="text-3xl font-semibold text-slate-800">{product.name}</h1>
-                <div className='flex items-center mt-2'>
+                <div className='mt-2 flex items-center gap-2'>
                     {Array(5).fill('').map((_, index) => (
                         <StarIcon key={index} size={14} className='text-transparent mt-0.5' fill={averageRating >= index + 1 ? "#00C950" : "#D1D5DB"} />
                     ))}
-                    <p className="text-sm ml-3 text-slate-500">{product.rating.length} Reviews</p>
+                    <span className="text-sm font-medium text-slate-600">
+                        {product.rating.length ? averageRating.toFixed(1) : "New"}
+                    </span>
+                    <span className="rating-count-pill">
+                        {product.rating.length} {product.rating.length === 1 ? "review" : "reviews"}
+                    </span>
                 </div>
                 {deliveredOrderId && (
                     <div className="mt-4 flex items-center gap-3">
