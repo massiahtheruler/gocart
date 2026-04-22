@@ -37,6 +37,12 @@ const statusCopy = {
   expired: "Expired",
 };
 
+const cardToneClasses = {
+  active: "deal-card--active",
+  upcoming: "deal-card--upcoming",
+  expired: "deal-card--expired",
+};
+
 const ActiveDeals = ({ limit = 3, showHeader = true, compact = false }) => {
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -145,13 +151,7 @@ const ActiveDeals = ({ limit = 3, showHeader = true, compact = false }) => {
             {orderedCoupons.map((coupon) => (
               <article
                 key={coupon.code}
-                className={`rounded-3xl border p-6 shadow-sm ${
-                  coupon.status === "active"
-                    ? "border-emerald-100 bg-gradient-to-br from-white to-emerald-50"
-                    : coupon.status === "upcoming"
-                      ? "border-sky-100 bg-gradient-to-br from-white to-sky-50"
-                      : "border-slate-200 bg-gradient-to-br from-white to-slate-100"
-                }`}
+                className={`deal-card rounded-3xl border p-6 shadow-sm ${cardToneClasses[coupon.status]}`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
