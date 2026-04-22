@@ -81,18 +81,20 @@ export async function POST(request) {
     let coupon = null;
     const normalizedCouponCode = couponCode?.trim().toUpperCase();
     const hasPlusPlan = has?.({ plan: "plus" }) ?? false;
+    const now = new Date();
 
     if (normalizedCouponCode) {
       coupon = await prisma.coupon.findFirst({
         where: {
           code: normalizedCouponCode,
-          expiresAt: { gt: new Date() },
+          startsAt: { lte: now },
+          expiresAt: { gte: now },
         },
       });
 
       if (!coupon) {
         return NextResponse.json(
-          { error: "Coupon not found or expired." },
+          { error: "Coupon not found, not active yet, or expired." },
           { status: 404 },
         );
       }

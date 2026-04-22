@@ -127,7 +127,11 @@ export async function PUT(request) {
     const mrp = Number(formData.get("mrp"));
     const price = Number(formData.get("price"));
     const categories = parseProductCategories(formData.getAll("categories"));
-    const images = formData.getAll("images").filter(Boolean);
+    const existingImages = formData.getAll("existingImages").map(String);
+    const imageSlots = [0, 1, 2, 3].map((index) => ({
+      existing: existingImages[index] || "",
+      file: formData.get(`imageSlot${index + 1}`),
+    }));
 
     if (
       !productId ||
@@ -156,12 +160,17 @@ export async function PUT(request) {
 
     let imagesUrl = existingProduct.images;
 
-    if (images.length > 0) {
-      imagesUrl = await Promise.all(
-        images.map(async (image) => {
+    imagesUrl = await Promise.all(
+      imageSlots.map(async (slot, index) => {
+        const incomingFile =
+          slot.file && typeof slot.file === "object" && "name" in slot.file
+            ? slot.file
+            : null;
+
+        if (incomingFile && incomingFile.size > 0) {
           const response = await imagekit.files.upload({
-            file: image,
-            fileName: image.name || `${name}-image`,
+            file: incomingFile,
+            fileName: incomingFile.name || `${name}-image-${index + 1}`,
             folder: "/gocart/products",
           });
           return buildImageKitUrl(response.filePath, [
@@ -169,7 +178,18 @@ export async function PUT(request) {
             { format: "webp" },
             { width: "1024" },
           ]);
-        }),
+        }
+
+        return slot.existing || existingProduct.images[index] || "";
+      }),
+    );
+
+    imagesUrl = imagesUrl.filter(Boolean);
+
+    if (imagesUrl.length < 1) {
+      return NextResponse.json(
+        { error: "Please keep or upload at least one image." },
+        { status: 400 },
       );
     }
 

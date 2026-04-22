@@ -89,7 +89,7 @@ export default function ReviewsPage() {
           <div className="mt-12 grid gap-5 lg:grid-cols-2">
             {reviews.map((review, index) => (
               <article
-                key={review.id}
+                key={review.id || `${review.product.id}-${review.createdAt}-${index}`}
                 className="motion-section glass-lift rounded-[1.6rem] p-5"
                 style={{ animationDelay: `${Math.min(index * 70, 420)}ms` }}
               >

@@ -177,7 +177,8 @@ export default function AdminCoupons() {
               </h2>
               <p className="mt-2 text-sm text-slate-500">
                 Set a start date and expiry so deals can be teased before they
-                become redeemable.
+                become redeemable. Expiry stays valid through the full selected
+                day.
               </p>
             </div>
             <span className="rounded-2xl bg-slate-50 p-3 text-violet-600">
@@ -231,6 +232,9 @@ export default function AdminCoupons() {
                   value={newCoupon.startsAt}
                   onChange={handleChange}
                 />
+                <p className="text-xs text-slate-400">
+                  Goes live at the start of this date.
+                </p>
               </label>
               <label className="space-y-2">
                 <span className="text-sm font-medium text-slate-600">
@@ -243,6 +247,9 @@ export default function AdminCoupons() {
                   value={newCoupon.expiresAt}
                   onChange={handleChange}
                 />
+                <p className="text-xs text-slate-400">
+                  Remains usable through the end of this date.
+                </p>
               </label>
             </div>
 

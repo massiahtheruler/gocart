@@ -8,6 +8,7 @@ export async function GET(request) {
       include: {
         rating: {
           select: {
+            id: true,
             createdAt: true,
             rating: true,
             review: true,

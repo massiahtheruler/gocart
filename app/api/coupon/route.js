@@ -55,7 +55,7 @@ export async function POST(request) {
       where: {
         code: normalizedCode,
         startsAt: { lte: now },
-        expiresAt: { gt: now },
+        expiresAt: { gte: now },
       },
     });
 

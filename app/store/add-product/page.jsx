@@ -126,7 +126,10 @@ export default function StoreAddProduct() {
       );
 
       Object.keys(images).forEach((key) => {
-        images[key] && formData.append("images", images[key]);
+        formData.append(`imageSlot${key}`, images[key] || "");
+      });
+      existingImages.forEach((imageUrl) => {
+        formData.append("existingImages", imageUrl);
       });
       const token = await getToken();
       const { data } = await axios({

@@ -83,8 +83,8 @@ export default function Product() {
         {product && <ProductDescription product={product} />}
 
         {relatedProducts.length > 0 && (
-          <div className="my-20 items-center justify-center">
-            <div className="mb-8 items-center justify-center">
+          <div className="my-20">
+            <div className="mb-8">
               <h2 className="text-2xl font-semibold text-slate-800">
                 Related products
               </h2>
@@ -92,9 +92,14 @@ export default function Product() {
                 Similar picks based on category and product ratings.
               </p>
             </div>
-            <div className="flex gap-6 items-center justify-center sm:flex sm:flex-wrap xl:gap-12">
+            <div className="grid grid-cols-1 gap-y-6 min-[500px]:grid-cols-2 xl:grid-cols-4 mt-30">
               {relatedProducts.map((item) => (
-                <ProductCard key={item.id} product={item} />
+                <div
+                  key={item.id}
+                  className="w-full max-w-[16rem] justify-self-center my-6"
+                >
+                  <ProductCard product={item} />
+                </div>
               ))}
             </div>
           </div>

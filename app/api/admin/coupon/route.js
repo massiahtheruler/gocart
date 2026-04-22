@@ -4,6 +4,17 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
 import { inngest } from "@/inngest/client";
 
+const parseCouponBoundary = (value, endOfDay = false) => {
+  if (!value) return new Date();
+
+  const isoValue =
+    value.length <= 10
+      ? `${value}T${endOfDay ? "23:59:59.999" : "00:00:00.000"}Z`
+      : value;
+
+  return new Date(isoValue);
+};
+
 export async function POST(request) {
   try {
     const { userId } = await auth();
@@ -16,8 +27,8 @@ export async function POST(request) {
       ...coupon,
       code: coupon.code.toUpperCase(),
       discount: Number(coupon.discount),
-      startsAt: new Date(coupon.startsAt || new Date()),
-      expiresAt: new Date(coupon.expiresAt),
+      startsAt: parseCouponBoundary(coupon.startsAt),
+      expiresAt: parseCouponBoundary(coupon.expiresAt, true),
     };
 
     if (Number.isNaN(normalizedCoupon.discount) || normalizedCoupon.discount <= 0) {
