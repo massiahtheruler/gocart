@@ -15,13 +15,19 @@
 
 ## 📖 Table of Contents
 
+- [🚀 Getting Started](#-getting-started)
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#-tech-stack)
-- [🚀 Getting Started](#-getting-started)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 
 ---
+
+## 🚀 Getting Started <a name="-getting-started"></a>
+
+" https://gocart-beta-one.vercel.app "
+- Live Vercel Delpoy URL -
+
 
 # GoCart
 
@@ -207,11 +213,12 @@ Key technical areas include:
 - responsive, state-driven UI logic
 - Tailwind-driven component styling and custom interaction design
 
-## Tech Stack
+## 🛠️ Tech Stack <a name="-tech-stack"></a>
 
 - Next.js 16
 - React 19
 - Tailwind CSS 4
+- Sass Css
 - Clerk
 - Prisma
 - Neon Postgres
@@ -293,51 +300,10 @@ GoCart reflects the kind of work I want to keep doing: product-focused front-end
 - **Vendor Dashboards:** Dedicated dashboards for vendors to manage products, view sales analytics, and track orders.
 - **Admin Panel:** A comprehensive dashboard for platform administrators to oversee vendors, products, and commissions.
 
-## 🛠️ Tech Stack <a name="-tech-stack"></a>
 
-- **Framework:** Next.js
-- **Styling:** Tailwind CSS
-- **UI Components:** Lucide React for icons
-- **State Management:** Redux Toolkit
 
-## 🚀 Getting Started <a name="-getting-started"></a>
 
-First, install the dependencies. We recommend using `npm` for this project.
 
-```bash
-npm install
-```
-
-Then, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-### Prisma schema sync
-
-If you pull schema changes, especially around coupons or other database-backed features, sync Prisma before testing or deploying:
-
-```bash
-npx prisma db push
-npx prisma generate
-```
-
-This repo also relies on Prisma Client generation during install for deployment, so keep the `postinstall` script intact when changing package scripts.
-
-You can start editing the page by modifying `app/(public)/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Outfit](https://vercel.com/font), a new font family for Vercel.
-
----
 
 ## 🤝 Contributing <a name="-contributing"></a>
 
