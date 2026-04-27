@@ -16,7 +16,7 @@
 ## 📖 Table of Contents
 
 - [🚀 Getting Started](#-getting-started)
-- [✨ Features](#-features)
+- [✨ Highlights](#-highlights)
 - [🛠️ Tech Stack](#-tech-stack)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
@@ -37,7 +37,7 @@ I approached this project like a marketplace product build rather than a basic s
 
 One of the things I’m most proud of in this project is that the interaction design and visual effects were not borrowed from GSAP snippets, Framer templates, or drag-and-drop UI builders. The glass, neumorphic, showroom-style surfaces, hover states, motion, layered glows, and state-driven UI behavior were built directly in the app with CSS, Tailwind, React, and component logic. Tailwind in particular became a big part of how I shaped the visual system, because it let me build and refine a custom component language instead of relying on pre-made themes or template styling.
 
-## Highlights
+## Highlights <a name="-highlights"></a>
 
 - Multi-vendor ecommerce platform with customer, seller, and admin experiences
 - Real sign up / sign in flow with account-aware rendering and protected actions
