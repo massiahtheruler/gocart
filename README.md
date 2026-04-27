@@ -1,34 +1,3 @@
-<div align="center">
-  <h1><img src="https://gocart-gs.vercel.app/favicon.ico" width="20" height="20" alt="GoCart Favicon">
-   GoCart</h1>
-  <p>
-    An open-source multi-vendor e-commerce platform built with Next.js and Tailwind CSS.
-  </p>
-  <p>
-    <a href="https://github.com/GreatStackDev/goCart/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/GreatStackDev/goCart?style=for-the-badge" alt="License"></a>
-    <a href="https://github.com/GreatStackDev/goCart/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome"></a>
-    <a href="https://github.com/GreatStackDev/goCart/issues"><img src="https://img.shields.io/github/issues/GreatStackDev/goCart?style=for-the-badge" alt="GitHub issues"></a>
-  </p>
-</div>
-
----
-
-## 📖 Table of Contents
-
-- [🚀 Getting Started](#-getting-started)
-- [✨ Highlights](#-highlights)
-- [🛠️ Tech Stack](#-tech-stack)
-- [🤝 Contributing](#-contributing)
-- [📜 License](#-license)
-
----
-
-## 🚀 Getting Started <a name="-getting-started"></a>
-
-" https://gocart-beta-one.vercel.app "
-- Live Vercel Delpoy URL -
-
-
 # GoCart
 
 GoCart is a full-stack, multi-vendor ecommerce platform built to feel like a real product. It combines customer shopping flows, seller tools, admin controls, payments, reviews, coupons, account-aware UI, and a custom premium visual system into one project.
@@ -37,7 +6,11 @@ I approached this project like a marketplace product build rather than a basic s
 
 One of the things I’m most proud of in this project is that the interaction design and visual effects were not borrowed from GSAP snippets, Framer templates, or drag-and-drop UI builders. The glass, neumorphic, showroom-style surfaces, hover states, motion, layered glows, and state-driven UI behavior were built directly in the app with CSS, Tailwind, React, and component logic. Tailwind in particular became a big part of how I shaped the visual system, because it let me build and refine a custom component language instead of relying on pre-made themes or template styling.
 
-## Highlights <a name="-highlights"></a>
+## Live Demo
+
+`https://gocart-beta-one.vercel.app`
+
+## Highlights
 
 - Multi-vendor ecommerce platform with customer, seller, and admin experiences
 - Real sign up / sign in flow with account-aware rendering and protected actions
@@ -213,12 +186,11 @@ Key technical areas include:
 - responsive, state-driven UI logic
 - Tailwind-driven component styling and custom interaction design
 
-## 🛠️ Tech Stack <a name="-tech-stack"></a>
+## Tech Stack
 
 - Next.js 16
 - React 19
 - Tailwind CSS 4
-- Sass Css
 - Clerk
 - Prisma
 - Neon Postgres
@@ -291,36 +263,3 @@ This repo also relies on Prisma Client generation during install for deployment,
 ## Closing
 
 GoCart reflects the kind of work I want to keep doing: product-focused front-end and full-stack engineering, strong UI polish, real account-aware behavior, custom interaction design, and the willingness to keep pushing a project until it feels finished, intentional, and portfolio-worthy.
-
-
-## Features
-
-- **Multi-Vendor Architecture:** Allows multiple vendors to register, manage their own products, and sell on a single platform.
-- **Customer-Facing Storefront:** A beautiful and responsive user interface for customers to browse and purchase products.
-- **Vendor Dashboards:** Dedicated dashboards for vendors to manage products, view sales analytics, and track orders.
-- **Admin Panel:** A comprehensive dashboard for platform administrators to oversee vendors, products, and commissions.
-
-
-
-
-
-
-## 🤝 Contributing <a name="-contributing"></a>
-
-We welcome contributions! Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for more details on how to get started.
-
----
-
-## 📜 License <a name="-license"></a>
-
-This project is licensed under the MIT License. See the [LICENSE.md](./LICENSE.md) file for details.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-# gocart
