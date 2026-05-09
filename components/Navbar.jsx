@@ -38,6 +38,8 @@ const Navbar = () => {
   const [activeInfoPanel, setActiveInfoPanel] = useState("about");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
+  const [hasStore, setHasStore] = useState(false);
+  const [storeStatus, setStoreStatus] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const cartCount = useSelector((state) => state.cart.total);
 
@@ -94,21 +96,28 @@ const Navbar = () => {
 
       try {
         const token = await getToken();
-        const [{ data: adminData }, sellerResponse] = await Promise.all([
+        const [{ data: adminData }, storeResponse] = await Promise.all([
           axios.get("/api/admin/is-admin", {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios
-            .get("/api/store/is-seller", {
+            .get("/api/store/create", {
               headers: { Authorization: `Bearer ${token}` },
             })
-            .catch(() => ({ data: { isSeller: false } })),
+            .catch(() => ({ data: { store: null } })),
         ]);
+        const currentStore = storeResponse.data?.store ?? null;
+        const currentStoreStatus = currentStore?.status || "";
+
         setIsAdmin(Boolean(adminData.isAdmin));
-        setIsSeller(Boolean(sellerResponse.data?.isSeller));
+        setHasStore(Boolean(currentStore));
+        setStoreStatus(currentStoreStatus);
+        setIsSeller(currentStoreStatus === "approved");
       } catch {
         setIsAdmin(false);
         setIsSeller(false);
+        setHasStore(false);
+        setStoreStatus("");
       }
     };
 
@@ -126,6 +135,26 @@ const Navbar = () => {
 
   const shouldShowFloatingStoreCta =
     !pathname?.startsWith("/store") && pathname !== "/create-store";
+
+  const storeMenuLabel = isSeller
+    ? "Store Dashboard"
+    : hasStore
+      ? "Store Status"
+      : "Start Selling";
+
+  const storeCtaLabel = isSeller
+    ? "Store"
+    : hasStore
+      ? storeStatus === "pending"
+        ? "Store Pending"
+        : "Store Status"
+      : "Start selling";
+
+  const storeCtaAriaLabel = isSeller
+    ? "Open seller dashboard"
+    : hasStore
+      ? "Open store application status"
+      : "Create your store";
 
   const userButtonAppearance = {
     elements: {
@@ -281,13 +310,13 @@ const Navbar = () => {
                         onClick={() => router.push("/orders")}
                       />
                       <UserButton.Action
-                        label="Add account"
+                        label={storeMenuLabel}
                         labelIcon={
                           <span className="clerk-orders-icon clerk-orders-icon--featured clerk-orders-icon--violet">
                             <PlusCircle size={15} />
                           </span>
                         }
-                        onClick={() => router.push("/create-store")}
+                        onClick={handleStoreCta}
                       />
                       {isAdmin && (
                         <UserButton.Action
@@ -422,13 +451,13 @@ const Navbar = () => {
                       onClick={() => router.push("/orders")}
                     />
                     <UserButton.Action
-                      label="Add account"
+                      label={storeMenuLabel}
                       labelIcon={
                         <span className="clerk-orders-icon clerk-orders-icon--violet">
                           <PlusCircle size={15} />
                         </span>
                       }
-                      onClick={() => router.push("/create-store")}
+                      onClick={handleStoreCta}
                     />
                     {isAdmin && (
                       <UserButton.Action
@@ -452,10 +481,10 @@ const Navbar = () => {
         <button
           type="button"
           onClick={handleStoreCta}
-          aria-label={isSeller ? "Open seller dashboard" : "Create your store"}
+          aria-label={storeCtaAriaLabel}
           className="emerald-cta glass-sheen fixed bottom-5 right-4 z-40 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(5,150,105,0.28)] sm:bottom-6 sm:right-6"
         >
-          {isSeller ? "Store" : "Start selling"}
+          {storeCtaLabel}
           <ArrowRight size={14} />
         </button>
       )}

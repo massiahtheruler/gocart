@@ -46,6 +46,23 @@ Commerce and Services:
 - Inngest event scheduling
 - OpenAI-compatible / Gemini-based AI listing support
 
+## Demo Accounts
+
+### Customer
+
+- Name: `Massiah TheRuler`
+- Email: `kingmassiah124@gmail.com`
+- Password: `random123!321`
+- Can browse products, save cart items, apply coupons, place orders, and leave reviews on delivered purchases
+
+### Seller Application Pending
+
+- Name: `Justin Henry`
+- Email: `justin.henry124@gmail.com`
+- Password: `random123!321`
+- Current state: submitted for store approval
+- Can be used to verify seller onboarding and pending-store account behavior
+
 ## What I Built
 
 ### 1. Marketplace Structure, Not Just a Storefront
