@@ -10,7 +10,7 @@ One of the things I’m most proud of in this project is that the interaction de
 
 `https://gocart-beta-one.vercel.app`
 
-## Highlights
+## Core Features
 
 - Multi-vendor ecommerce platform with customer, seller, and admin experiences
 - Real sign up / sign in flow with account-aware rendering and protected actions
@@ -25,6 +25,26 @@ One of the things I’m most proud of in this project is that the interaction de
 - Admin dashboards for stores, approvals, reviews, and coupon campaigns
 - Dark mode plus a custom premium glass / neumorphic / showroom-inspired design system
 - Fully customized motion, hover, parallax, and surface effects built from scratch
+
+## Architecture Snapshot
+
+Frontend:
+- Next.js 16 App Router
+- React 19
+- Tailwind CSS 4
+- Redux Toolkit
+
+Backend and Data:
+- Prisma ORM
+- Neon Postgres
+- Clerk authentication
+- Next.js API routes
+
+Commerce and Services:
+- Stripe Checkout and webhook handling
+- ImageKit media upload flow
+- Inngest event scheduling
+- OpenAI-compatible / Gemini-based AI listing support
 
 ## What I Built
 
