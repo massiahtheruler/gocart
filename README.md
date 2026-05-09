@@ -55,6 +55,20 @@ Commerce and Services:
 - Password: `random123!321`
 - Can browse products, save cart items, apply coupons, place orders, and leave reviews on delivered purchases
 
+### Seller + Admin
+
+- Name: `Justin H`
+- Email: `justin.henry0024@gmail.com`
+- Password: `random123!321`
+- Can access the approved store dashboard and the admin dashboard
+
+### Admin Only
+
+- Name: `Massiah`
+- Email: `massiah024@gmail.com`
+- Password: `random123!321`
+- Can access the admin dashboard without an attached store
+
 ### Seller Application Pending
 
 - Name: `Justin Henry`
