@@ -320,7 +320,7 @@ const Navbar = () => {
                       />
                       {isAdmin && (
                         <UserButton.Action
-                          label="Admin Panel"
+                          label="Admin Dashboard"
                           labelIcon={
                             <span className="clerk-orders-icon clerk-orders-icon--featured clerk-orders-icon--sky">
                               <ArrowRight size={15} />
@@ -341,7 +341,7 @@ const Navbar = () => {
                         onClick={() => router.push("/admin")}
                         className="admin-cta glass-sheen inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
                       >
-                        Admin
+                        Admin Dashboard
                         <ArrowRight size={14} />
                       </button>
                     )}
@@ -461,7 +461,7 @@ const Navbar = () => {
                     />
                     {isAdmin && (
                       <UserButton.Action
-                        label="Admin Panel"
+                        label="Admin Dashboard"
                         labelIcon={
                           <span className="clerk-orders-icon clerk-orders-icon--featured clerk-orders-icon--sky">
                             <ArrowRight size={15} />
