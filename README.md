@@ -10,6 +10,20 @@ One of the things I’m most proud of in this project is that the interaction de
 
 `https://gocart-beta-one.vercel.app`
 
+## Project Preview
+
+![GoCart homepage hero](./readme-assets/gc-hero.png)
+
+## Walkthrough GIFs
+
+### Customer Flow
+
+![GoCart customer flow](./readme-assets/gc-customer-flow.gif)
+
+### Seller Flow
+
+![GoCart seller flow](./readme-assets/gc-seller-flow.gif)
+
 ## Core Features
 
 - Multi-vendor ecommerce platform with customer, seller, and admin experiences
@@ -45,6 +59,20 @@ Commerce and Services:
 - ImageKit media upload flow
 - Inngest event scheduling
 - OpenAI-compatible / Gemini-based AI listing support
+
+## Feature Screens
+
+### Seller Dashboard
+
+![GoCart seller dashboard](./readme-assets/gc-seller-dash.png)
+
+### Store Order Management
+
+![GoCart seller order management](./readme-assets/gc-store-orders.png)
+
+### Cart and Checkout State
+
+![GoCart cart and payment summary](./readme-assets/gc-my-cart.png)
 
 ## Demo Accounts
 
