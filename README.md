@@ -27,7 +27,7 @@ The interaction design and visual effects were built directly in the app with CS
 ## Core Features
 
 - Multi-vendor ecommerce platform with customer, seller, and admin experiences
-- Real sign up / sign in flow with account-aware rendering and protected actions
+- full authentication flow with account-aware admin, seller and user rendering and protected actions
 - Seller store creation, approval workflow, and store management tools
 - Product creation, editing, stock toggling, image galleries, and multi-category support
 - AI-assisted product description flow for faster seller listing creation
