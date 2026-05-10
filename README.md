@@ -258,7 +258,7 @@ That extra push is a big reason the project now feels more like a portfolio cent
 - Making coupons behave like real campaigns by handling start dates, inclusive end dates, saved-deal persistence, and checkout validation across multiple routes
 - Keeping storefront polish, dark mode, tactile motion, and glass-heavy surfaces feeling premium without letting dynamic state changes make the app feel unstable or overloaded
 - Stabilizing the project across Prisma, Clerk, Stripe, deployment issues, and schema updates while still pushing product features forward instead of freezing the app every time the stack fought back
--Building on Next.js 16 and React 19 while keeping the luxury storefront, dark mode, and role-aware UI responsive as the app grew in complexity
+- Building on Next.js 16 and React 19 while keeping the luxury storefront, dark mode, and role-aware UI responsive as the app grew in complexity
 
 ## Technical Notes
 
