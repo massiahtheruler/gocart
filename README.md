@@ -193,6 +193,7 @@ Campaign logic includes:
 - admin coupon creation with timing controls
 
 I wanted deals to feel browseable and alive, with some urgency and discoverability to them, not like a hidden admin-only code sitting in the background.
+That also connects back to how I think about product from a business side. Timed offers, visible deal states, and saved promotions make the marketplace feel closer to real marketing cycles instead of a one-off promo field.
 
 ### 7. Reviews and Ratings with Real Logic
 I built reviews around actual delivered purchases instead of allowing random fake rating spam.
@@ -257,6 +258,7 @@ That extra push is a big reason the project now feels more like a portfolio cent
 - Making coupons behave like real campaigns by handling start dates, inclusive end dates, saved-deal persistence, and checkout validation across multiple routes
 - Keeping storefront polish, dark mode, tactile motion, and glass-heavy surfaces feeling premium without letting dynamic state changes make the app feel unstable or overloaded
 - Stabilizing the project across Prisma, Clerk, Stripe, deployment issues, and schema updates while still pushing product features forward instead of freezing the app every time the stack fought back
+-Building on Next.js 16 and React 19 while keeping the luxury storefront, dark mode, and role-aware UI responsive as the app grew in complexity
 
 ## Technical Notes
 
@@ -344,9 +346,9 @@ This repo also relies on Prisma Client generation during install for deployment,
 ## Future Improvements
 
 - seller-scoped coupon creation and eligibility rules
-- richer analytics for sellers and admins
+- richer seller and admin analytics around conversion, product performance, and order trends
 - stronger AI output validation and listing workflows
-- product comparison flow
+- side-by-side item comparison for higher-consideration purchases
 - more advanced recommendation logic
 - shipping and fulfillment depth beyond the current status system
 
