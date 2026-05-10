@@ -11,6 +11,7 @@ The interaction design and visual effects were built directly in the app with CS
 `https://gocart-beta-one.vercel.app`
 
 ## Project Preview
+The preview and walkthroughs below show the premium storefront presentation, customer purchase flow, and seller-side product management layers that make the platform feel complete.
 
 ![GoCart homepage hero](./readme-assets/gc-hero.png)
 
@@ -93,7 +94,7 @@ Commerce and Services:
 
 ## Feature Screens
 
-The screenshots and walkthroughs below highlight the customer, seller, and admin experience layers across the platform.
+The screenshots below focus on the dashboard structure, seller tooling, and checkout state that support the broader marketplace flow.
 
 ### Seller Dashboard
 
