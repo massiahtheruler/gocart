@@ -4,7 +4,7 @@ GoCart is a full-stack, multi-vendor ecommerce platform built to feel like a rea
 
 I approached this project like a marketplace product build rather than a basic storefront. The goal was not just to render products, but to build a complete experience with multiple account types, store approval flow, dashboard logic, dark mode, functional checkout, scheduled coupons, review systems, AI-assisted product creation, and a front-end that feels intentional.
 
-One of the things I’m most proud of in this project is that the interaction design and visual effects were not borrowed from GSAP snippets, Framer templates, or drag-and-drop UI builders. The glass, neumorphic, showroom-style surfaces, hover states, motion, layered glows, and state-driven UI behavior were built directly in the app with CSS, Tailwind, React, and component logic. Tailwind in particular became a big part of how I shaped the visual system, because it let me build and refine a custom component language instead of relying on pre-made themes or template styling.
+The interaction design and visual effects were built directly in the app with CSS, Tailwind, React, and component logic instead of relying on prefab animation templates or drag-and-drop UI systems. I chose a tactile, glassy, showroom-inspired visual direction because I wanted the marketplace to feel premium and product-led instead of flat, generic, or template-driven.
 
 ## Live Demo
 
@@ -60,20 +60,6 @@ Commerce and Services:
 - Inngest event scheduling
 - OpenAI-compatible / Gemini-based AI listing support
 
-## Feature Screens
-
-### Seller Dashboard
-
-![GoCart seller dashboard](./readme-assets/gc-seller-dash.png)
-
-### Store Order Management
-
-![GoCart seller order management](./readme-assets/gc-store-orders.png)
-
-### Cart and Checkout State
-
-![GoCart cart and payment summary](./readme-assets/gc-my-cart.png)
-
 ## Demo Accounts
 
 ### Customer
@@ -105,12 +91,28 @@ Commerce and Services:
 - Current state: submitted for store approval
 - Can be used to verify seller onboarding and pending-store account behavior
 
+## Feature Screens
+
+The screenshots and walkthroughs below highlight the customer, seller, and admin experience layers across the platform.
+
+### Seller Dashboard
+
+![GoCart seller dashboard](./readme-assets/gc-seller-dash.png)
+
+### Store Order Management
+
+![GoCart seller order management](./readme-assets/gc-store-orders.png)
+
+### Cart and Checkout State
+
+![GoCart cart and payment summary](./readme-assets/gc-my-cart.png)
+
 ## What I Built
 
 ### 1. Marketplace Structure, Not Just a Storefront
 This project supports multiple roles and multiple experiences inside the same app.
 
-That includes:
+Key features include:
 - customer browsing and checkout
 - seller store creation and management
 - admin approval and moderation tools
@@ -122,7 +124,7 @@ I wanted it to behave like an actual platform, not just a one-account demo store
 ### 2. Real Account Flow and Protected Commerce Actions
 I built account-aware behavior throughout the app instead of treating auth like a decorative add-on.
 
-That includes:
+The system supports:
 - sign up and sign in with Clerk
 - protected cart, coupon, review, and checkout actions
 - conditional navbar actions depending on user role
@@ -134,7 +136,7 @@ This makes the app feel like a real product with rules, not a static UI shell.
 ### 3. Multi-Vendor Seller Experience
 Sellers can do more than upload one product and stop there.
 
-That includes:
+Seller tools include:
 - create-store flow
 - admin approval before a store goes live
 - seller dashboard stats
@@ -150,7 +152,7 @@ One of the most important parts of this project was turning the seller side into
 ### 4. Product System and Listing Depth
 I expanded the product layer so listings feel richer and more flexible.
 
-That includes:
+Catalog behavior includes:
 - multiple product images
 - product descriptions
 - category and custom category support
@@ -162,9 +164,9 @@ That includes:
 I also fixed edit behavior so changing one product image doesn’t wipe out the rest of the gallery, which is the kind of detail that matters in a real app.
 
 ### 5. Functional Checkout and Payment Flow
-This is not a fake cart.
+I built a real checkout flow with purchase state, payment handling, and fulfillment visibility across both buyer and seller experiences.
 
-That includes:
+Commerce behavior includes:
 - persistent cart flow
 - saved address handling
 - cash on delivery
@@ -179,7 +181,7 @@ I also handled the less glamorous parts like coupon validation rules, date windo
 ### 6. Coupons, Campaigns, and Deals
 The coupon system became much more than a single promo-code field.
 
-That includes:
+Campaign logic includes:
 - public deals page
 - active, upcoming, and expired campaign visibility
 - scheduled coupon start dates
@@ -194,7 +196,7 @@ I wanted deals to feel like a real campaign system with urgency and discoverabil
 ### 7. Reviews and Ratings with Real Logic
 I built reviews around actual delivered purchases instead of allowing random fake rating spam.
 
-That includes:
+Review behavior includes:
 - delivered-order review gating
 - rating modal flow
 - editable reviews
@@ -208,7 +210,7 @@ This gave the catalog more credibility and made the sort/filter features more me
 ### 8. AI-Assisted Seller Flow
 I added AI product assistance as an actual seller feature, not just as a demo talking point.
 
-That includes:
+The AI workflow includes:
 - AI-backed product description / listing support
 - image-driven product generation flow
 - structured parsing and validation work so the feature behaves predictably
@@ -218,7 +220,7 @@ This was one of the clearest product-level additions because it changes the sell
 ### 9. Custom UI Direction and Interaction Design
 The front-end is one of the biggest ways this project became mine.
 
-That includes:
+The visual system includes:
 - glass / neumorphic surfaces
 - luxury showroom-inspired product presentation
 - custom hover glows and layered shadows
@@ -230,7 +232,7 @@ That includes:
 
 I wanted the experience to feel modern, tactile, and curated instead of generic ecommerce boilerplate.
 
-## Built Beyond the Expected Scope
+## Expanded Product Scope
 
 This project went well beyond the baseline marketplace feature set and expected scope asked of me or what I originally planned for it.
 
@@ -246,6 +248,14 @@ I expanded it by:
 - adapting the app to a modern Next.js + Prisma + Clerk stack while keeping the UX polished
 
 The result is much closer to a portfolio product build than a simple demo app.
+
+## Technical Challenges
+
+- Hardening role-aware rendering so customer, seller, pending-seller, and admin accounts each surface the right actions without collapsing into confusing navigation states
+- Preserving multi-image product galleries during edit flows so sellers can update one image without wiping the rest of the listing
+- Making coupons behave like real campaigns by handling start dates, inclusive end dates, saved-deal persistence, and checkout validation across multiple routes
+- Keeping storefront polish, dark mode, tactile motion, and glass-heavy surfaces feeling premium without letting dynamic state changes make the app feel unstable or overloaded
+- Stabilizing the project across Prisma, Clerk, Stripe, deployment issues, and schema updates while still pushing product features forward instead of freezing the app every time the stack fought back
 
 ## Technical Notes
 
